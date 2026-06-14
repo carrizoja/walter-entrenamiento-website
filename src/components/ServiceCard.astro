@@ -1,0 +1,110 @@
+---
+// Service Card Component — premium redesign with gradient border, SVG icons, micro-interactions
+interface Props {
+  title: string;
+  description: string;
+  icon: 'personal' | 'grupal' | 'terapeutico' | 'masajes' | 'rehabilitacion' | 'terapias';
+  link?: string;
+  accentColor?: string; // optional override, defaults to brand orange
+}
+
+const {
+  title,
+  description,
+  icon,
+  link = '#servicios',
+  accentColor = '#FF6B35',
+} = Astro.props;
+
+// SVG icon paths — proper branded icons, no emojis
+const iconPaths: Record<string, { path: string; viewBox?: string }> = {
+  personal: {
+    viewBox: '0 0 24 24',
+    path: `<path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.75" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/>`,
+  },
+  grupal: {
+    viewBox: '0 0 24 24',
+    path: `<path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.75" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"/>`,
+  },
+  terapeutico: {
+    viewBox: '0 0 24 24',
+    path: `<path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.75" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"/>`,
+  },
+  masajes: {
+    viewBox: '0 0 24 24',
+    path: `<path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.75" d="M7 11.5V14m0-2.5v-6a1.5 1.5 0 113 0m-3 6a1.5 1.5 0 00-3 0v2a7.5 7.5 0 0015 0v-5a1.5 1.5 0 00-3 0m-6-3V11m0-5.5v-1a1.5 1.5 0 013 0v1m0 0V11m0-5.5a1.5 1.5 0 013 0v3m0 0V11"/>`,
+  },
+  rehabilitacion: {
+    viewBox: '0 0 24 24',
+    path: `<path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.75" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/>`,
+  },
+  terapias: {
+    viewBox: '0 0 24 24',
+    path: `<path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.75" d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z"/>`,
+  },
+};
+
+const iconData = iconPaths[icon] || iconPaths.personal;
+---
+
+<article class="service-card group relative bg-white dark:bg-[#1a0509] rounded-2xl overflow-hidden transition-all duration-500 cursor-pointer border border-gray-100 dark:border-white/5 hover:border-[#FF6B35]/30 dark:hover:border-[#FF6B35]/20">
+
+  <!-- Gradient border effect on hover (pseudo-element via absolute overlay) -->
+  <div class="absolute inset-0 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none" style={`background: linear-gradient(135deg, ${accentColor}18 0%, transparent 60%)`} aria-hidden="true"></div>
+
+  <!-- Top accent bar — slides in on hover -->
+  <div class="absolute top-0 left-0 right-0 h-[3px] bg-gradient-to-r from-[#FF6B35] to-[#C83B08] origin-left scale-x-0 group-hover:scale-x-100 transition-transform duration-500 rounded-t-2xl" aria-hidden="true"></div>
+
+  <!-- Shadow — lifts on hover -->
+  <div class="absolute inset-0 rounded-2xl shadow-[0_1px_3px_rgba(0,0,0,0.06),0_4px_16px_rgba(0,0,0,0.08)] group-hover:shadow-[0_12px_40px_rgba(255,107,53,0.18),0_4px_12px_rgba(0,0,0,0.12)] transition-shadow duration-500 pointer-events-none" aria-hidden="true"></div>
+
+  <div class="relative p-8 space-y-5">
+    <!-- Icon container -->
+    <div class="w-14 h-14 rounded-2xl bg-gradient-to-br from-[#FF6B35]/12 to-[#C83B08]/8 dark:from-[#FF6B35]/20 dark:to-[#C83B08]/12 border border-[#FF6B35]/20 dark:border-[#FF6B35]/25 flex items-center justify-center group-hover:scale-110 group-hover:bg-gradient-to-br group-hover:from-[#FF6B35] group-hover:to-[#C83B08] group-hover:border-transparent group-hover:shadow-[0_4px_16px_rgba(255,107,53,0.40)] transition-all duration-400">
+      <svg
+        class="w-7 h-7 text-[#FF6B35] group-hover:text-white transition-colors duration-300"
+        fill="none"
+        stroke="currentColor"
+        viewBox={iconData.viewBox || '0 0 24 24'}
+        aria-hidden="true"
+      >
+        <Fragment set:html={iconData.path} />
+      </svg>
+    </div>
+
+    <!-- Title -->
+    <h3 class="font-montserrat text-xl font-bold text-gray-900 dark:text-white group-hover:text-[#C83B08] dark:group-hover:text-[#FF6B35] transition-colors duration-300">
+      {title}
+    </h3>
+
+    <!-- Description -->
+    <p class="font-quicksand text-gray-600 dark:text-gray-400 leading-relaxed text-[0.95rem]">
+      {description}
+    </p>
+
+    <!-- CTA link -->
+    <a
+      href={link}
+      class="inline-flex items-center gap-2 font-montserrat font-bold text-sm text-[#FF6B35] hover:text-[#C83B08] dark:hover:text-[#FF7A45] transition-colors duration-300 group/link mt-2"
+      aria-label={`Ver más sobre ${title}`}
+    >
+      <span>Ver más detalles</span>
+      <svg
+        class="w-4 h-4 transition-transform duration-300 group-hover/link:translate-x-1.5"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="2.5"
+        viewBox="0 0 24 24"
+        aria-hidden="true"
+      >
+        <path stroke-linecap="round" stroke-linejoin="round" d="M17 8l4 4m0 0l-4 4m4-4H3"/>
+      </svg>
+    </a>
+  </div>
+
+  <!-- Subtle bottom-right corner decoration -->
+  <div
+    class="absolute bottom-0 right-0 w-28 h-28 rounded-tl-full bg-gradient-to-tl from-[#FF6B35]/6 to-transparent dark:from-[#FF6B35]/10 translate-x-10 translate-y-10 group-hover:translate-x-6 group-hover:translate-y-6 transition-transform duration-500 pointer-events-none"
+    aria-hidden="true"
+  ></div>
+</article>

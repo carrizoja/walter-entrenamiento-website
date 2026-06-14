@@ -1,0 +1,294 @@
+---
+export const prerender = false;
+
+import Layout from '../layouts/Layout.astro';
+import PrimaryButton from '../components/ux/PrimaryButton.astro';
+import { getPublishedArticles, getFeaturedArticles } from '../lib/queries';
+
+let blogPosts: Awaited<ReturnType<typeof getPublishedArticles>> = [];
+let featuredPosts: Awaited<ReturnType<typeof getFeaturedArticles>> = [];
+
+try {
+  [blogPosts, featuredPosts] = await Promise.all([
+    getPublishedArticles(),
+    getFeaturedArticles(),
+  ]);
+} catch (err) {
+  // Log only — never expose internals to visitors. Page renders empty state.
+  console.error('[bienestar] Firebase fetch failed:', err);
+}
+
+const categories = ['Todos', 'Entrenamiento', 'Consejos', 'Motivación', 'Nutrición', 'Recuperación', 'Salud Mental'];
+
+function formatDate(dateStr: string) {
+  return new Date(dateStr).toLocaleDateString('es-AR', { day: 'numeric', month: 'short', year: 'numeric' });
+}
+---
+
+<Layout>
+
+  <!-- ============================================================
+       HERO
+       ============================================================ -->
+  <section class="relative pt-32 pb-0 bg-white dark:bg-[#0f0508] overflow-hidden">
+    <div class="absolute inset-0 pointer-events-none" aria-hidden="true">
+      <div class="absolute -top-32 -right-32 w-[600px] h-[600px] rounded-full bg-[#FF6B35]/7 dark:bg-[#FF6B35]/10 blur-[100px]"></div>
+      <div class="absolute bottom-0 -left-24 w-[400px] h-[400px] rounded-full bg-[#701D2A]/6 dark:bg-[#701D2A]/15 blur-[80px]"></div>
+    </div>
+
+    <div class="relative z-10 max-w-7xl mx-auto px-6 lg:px-8 pb-24">
+      <div class="text-center space-y-6 max-w-3xl mx-auto">
+        <div class="inline-flex items-center gap-2 bg-[#FF6B35]/10 dark:bg-[#FF6B35]/15 border border-[#FF6B35]/20 px-4 py-1.5 rounded-full">
+          <span class="w-1.5 h-1.5 rounded-full bg-[#FF6B35] animate-pulse-glow" aria-hidden="true"></span>
+          <span class="font-montserrat text-xs font-bold text-[#C83B08] dark:text-[#FF6B35] uppercase tracking-widest">Contenido & Tips</span>
+        </div>
+        <h1 class="font-montserrat text-5xl lg:text-7xl font-black leading-[0.95] text-gray-900 dark:text-white">
+          Blog de <span class="bg-gradient-to-r from-[#FF6B35] via-[#C83B08] to-[#701D2A] bg-clip-text text-transparent">Bienestar</span>
+        </h1>
+        <p class="font-quicksand text-xl text-gray-600 dark:text-gray-400 leading-relaxed">
+          Consejos, tips y conocimientos para tu salud física y mental.
+        </p>
+      </div>
+    </div>
+
+    <div aria-hidden="true">
+      <svg viewBox="0 0 1440 80" fill="none" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none" class="w-full h-16 lg:h-20">
+        <path d="M0 40C240 80 480 0 720 40C960 80 1200 0 1440 40V80H0V40Z" class="fill-gray-50 dark:fill-[#130308]"/>
+      </svg>
+    </div>
+  </section>
+
+  <!-- ============================================================
+       FEATURED ARTICLES
+       ============================================================ -->
+  <section class="py-20 bg-gray-50 dark:bg-[#130308]">
+    <div class="max-w-7xl mx-auto px-6 lg:px-8">
+      <div class="mb-10">
+        <h2 class="font-montserrat text-3xl font-black text-gray-900 dark:text-white mb-1">Artículos Destacados</h2>
+        <p class="font-quicksand text-gray-500 dark:text-gray-400">Lo más relevante para tu bienestar</p>
+      </div>
+
+      <div class="grid md:grid-cols-2 gap-7">
+        {featuredPosts.map(post => (
+          <article class="group relative bg-white dark:bg-[#1a0509] rounded-2xl overflow-hidden border border-gray-100 dark:border-white/5 hover:border-[#FF6B35]/25 transition-all duration-400 hover:shadow-[0_12px_40px_rgba(255,107,53,0.12)] hover:-translate-y-1">
+            <!-- Image area with gradient -->
+            <div class="relative aspect-video overflow-hidden" style={`background: linear-gradient(135deg, ${post.accent_from} 0%, ${post.accent_to} 100%)`}>
+              <div class="absolute inset-0 flex items-center justify-center">
+                <svg class="w-16 h-16 text-white/20" fill="none" stroke="currentColor" stroke-width="1.25" viewBox="0 0 24 24" aria-hidden="true">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
+                </svg>
+              </div>
+              <!-- Category badge -->
+              <div class="absolute top-4 left-4 bg-white/15 backdrop-blur-sm text-white border border-white/20 px-3 py-1 rounded-full font-montserrat text-xs font-bold">
+                {post.category}
+              </div>
+              <div class="absolute top-4 right-4 bg-white text-[#FF6B35] px-3 py-1 rounded-full font-montserrat text-xs font-bold uppercase">
+                Destacado
+              </div>
+            </div>
+
+            <div class="p-6 space-y-3">
+              <div class="flex items-center gap-3 text-xs font-quicksand text-gray-500 dark:text-gray-400">
+                <span>{formatDate(post.created_at)}</span>
+                <span aria-hidden="true">·</span>
+                <span>{post.read_time} lectura</span>
+              </div>
+              <h3 class="font-montserrat text-xl font-black text-gray-900 dark:text-white group-hover:text-[#FF6B35] transition-colors duration-300 leading-snug">
+                {post.title}
+              </h3>
+              <p class="font-quicksand text-gray-600 dark:text-gray-400 leading-relaxed text-sm">
+                {post.excerpt}
+              </p>
+              <a
+                href={`/bienestar/${post.slug}`}
+                class="inline-flex items-center gap-2 font-montserrat font-bold text-sm text-[#FF6B35] hover:text-[#C83B08] transition-colors duration-300 group/link"
+                aria-label={`Leer artículo: ${post.title}`}
+              >
+                Leer más
+                <svg class="w-4 h-4 transition-transform duration-300 group-hover/link:translate-x-1" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24" aria-hidden="true">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M17 8l4 4m0 0l-4 4m4-4H3"/>
+                </svg>
+              </a>
+            </div>
+          </article>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================
+       ALL ARTICLES + FILTER
+       ============================================================ -->
+  <section class="py-20 bg-white dark:bg-[#0f0508]">
+    <div class="max-w-7xl mx-auto px-6 lg:px-8">
+      <!-- Category filter -->
+      <div class="flex flex-wrap justify-center gap-2.5 mb-12" role="group" aria-label="Filtrar por categoría">
+        {categories.map((cat, i) => (
+          <button
+            class={`filter-cat-btn px-5 py-2 rounded-full font-montserrat font-bold text-sm transition-all duration-300 hover:scale-105 border ${
+              i === 0
+                ? 'bg-gradient-to-r from-[#FF6B35] to-[#C83B08] text-white border-transparent shadow-[0_2px_12px_rgba(255,107,53,0.30)] active'
+                : 'bg-white dark:bg-[#1a0509] text-gray-700 dark:text-gray-300 border-gray-200 dark:border-white/8 hover:border-[#FF6B35]/40 hover:text-[#FF6B35]'
+            }`}
+            data-cat={cat.toLowerCase()}
+          >
+            {cat}
+          </button>
+        ))}
+      </div>
+
+      <div class="mb-8">
+        <h2 class="font-montserrat text-3xl font-black text-gray-900 dark:text-white mb-1">Todos los Artículos</h2>
+        <p class="font-quicksand text-gray-500 dark:text-gray-400">Explorá nuestro contenido completo</p>
+      </div>
+
+      <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+        {blogPosts.map(post => (
+          <article
+            class="blog-card group relative bg-gray-50 dark:bg-[#1a0509] rounded-2xl overflow-hidden border border-gray-100 dark:border-white/5 hover:border-[#FF6B35]/20 transition-all duration-400 hover:shadow-[0_8px_32px_rgba(255,107,53,0.10)] hover:-translate-y-1"
+            data-cat={post.category.toLowerCase()}
+          >
+            <!-- Top color stripe -->
+            <div class="h-1 w-full" style={`background: linear-gradient(to right, ${post.accent_from}, ${post.accent_to})`} aria-hidden="true"></div>
+
+            <div class="p-6 space-y-3">
+              <div class="flex items-center justify-between">
+                <span
+                  class="inline-block px-3 py-1 rounded-full font-montserrat text-xs font-bold text-white"
+                  style={`background: linear-gradient(135deg, ${post.accent_from}, ${post.accent_to})`}
+                >
+                  {post.category}
+                </span>
+                <span class="font-quicksand text-xs text-gray-400">{post.read_time}</span>
+              </div>
+
+              <h3 class="font-montserrat text-lg font-black text-gray-900 dark:text-white group-hover:text-[#FF6B35] transition-colors duration-300 leading-snug line-clamp-2">
+                {post.title}
+              </h3>
+              <p class="font-quicksand text-gray-600 dark:text-gray-400 text-sm leading-relaxed line-clamp-3">
+                {post.excerpt}
+              </p>
+
+              <div class="flex items-center justify-between pt-3 border-t border-gray-100 dark:border-white/5">
+                <span class="font-quicksand text-xs text-gray-400">{formatDate(post.created_at)}</span>
+                <a
+                  href={`/bienestar/${post.slug}`}
+                  class="inline-flex items-center gap-1.5 font-montserrat font-bold text-xs text-[#FF6B35] hover:text-[#C83B08] transition-colors duration-300 group/link"
+                  aria-label={`Leer: ${post.title}`}
+                >
+                  Leer
+                  <svg class="w-3.5 h-3.5 transition-transform duration-300 group-hover/link:translate-x-0.5" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24" aria-hidden="true">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7"/>
+                  </svg>
+                </a>
+              </div>
+            </div>
+          </article>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================
+       BENEFITS SECTION
+       ============================================================ -->
+  <section class="py-24 bg-gray-50 dark:bg-[#130308]">
+    <div class="max-w-7xl mx-auto px-6 lg:px-8">
+      <div class="text-center mb-14">
+        <h2 class="font-montserrat text-4xl lg:text-5xl font-black text-gray-900 dark:text-white leading-tight">
+          Beneficios del <span class="bg-gradient-to-r from-[#FF6B35] to-[#C83B08] bg-clip-text text-transparent">Ejercicio</span>
+        </h2>
+        <p class="font-quicksand text-lg text-gray-600 dark:text-gray-400 mt-4 max-w-2xl mx-auto">
+          El entrenamiento regular transforma tu vida en múltiples dimensiones.
+        </p>
+      </div>
+
+      <div class="grid md:grid-cols-3 gap-7">
+        {[
+          {
+            title: 'Beneficios Físicos',
+            gradient: 'from-[#FF6B35] to-[#C83B08]',
+            accent: '#FF6B35',
+            iconPath: 'M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z',
+            items: ['Mejora la fuerza y resistencia muscular', 'Aumenta la flexibilidad y movilidad', 'Fortalece el sistema cardiovascular', 'Previene enfermedades crónicas', 'Mejora la postura y equilibrio'],
+          },
+          {
+            title: 'Beneficios Mentales',
+            gradient: 'from-[#701D2A] to-[#8C2A3B]',
+            accent: '#701D2A',
+            iconPath: 'M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z',
+            items: ['Reduce el estrés y la ansiedad', 'Mejora el estado de ánimo', 'Aumenta la concentración y memoria', 'Promueve un mejor descanso', 'Eleva la autoestima y confianza'],
+          },
+          {
+            title: 'Beneficios Emocionales',
+            gradient: 'from-[#C56C7A] to-[#701D2A]',
+            accent: '#C56C7A',
+            iconPath: 'M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z',
+            items: ['Genera bienestar y felicidad', 'Fortalece la resiliencia emocional', 'Mejora las relaciones sociales', 'Proporciona sentido de logro', 'Crea hábitos positivos duraderos'],
+          },
+        ].map(benefit => (
+          <div class="group relative bg-white dark:bg-[#1a0509] rounded-2xl border border-gray-100 dark:border-white/5 hover:border-[#FF6B35]/20 p-8 space-y-5 transition-all duration-400 hover:shadow-[0_12px_32px_rgba(255,107,53,0.10)] hover:-translate-y-1">
+            <div class={`w-12 h-12 rounded-xl bg-gradient-to-br ${benefit.gradient} flex items-center justify-center group-hover:scale-110 transition-transform duration-300`}>
+              <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" stroke-width="1.75" viewBox="0 0 24 24" aria-hidden="true">
+                <path stroke-linecap="round" stroke-linejoin="round" d={benefit.iconPath}/>
+              </svg>
+            </div>
+            <h3 class="font-montserrat text-xl font-black text-gray-900 dark:text-white">{benefit.title}</h3>
+            <ul class="space-y-2">
+              {benefit.items.map(item => (
+                <li class="flex items-start gap-2 font-quicksand text-sm text-gray-700 dark:text-gray-300">
+                  <span class="mt-1.5 w-1.5 h-1.5 rounded-full shrink-0" style={`background: ${benefit.accent}`} aria-hidden="true"></span>
+                  {item}
+                </li>
+              ))}
+            </ul>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================
+       NEWSLETTER CTA
+       ============================================================ -->
+  <section class="py-24 bg-white dark:bg-[#0f0508]">
+    <div class="max-w-4xl mx-auto px-6 text-center">
+      <div class="relative overflow-hidden rounded-3xl">
+        <div class="absolute inset-0 bg-gradient-to-br from-[#701D2A] via-[#8C2A3B] to-[#3A0C13]" aria-hidden="true"></div>
+        <div class="absolute -top-16 -right-16 w-64 h-64 rounded-full bg-[#FF6B35]/15 blur-[60px] pointer-events-none" aria-hidden="true"></div>
+        <div class="absolute inset-0 opacity-[0.04]" style="background-image: radial-gradient(circle, #fff 1px, transparent 1px); background-size: 24px 24px;" aria-hidden="true"></div>
+
+        <div class="relative z-10 px-8 py-14 space-y-6">
+          <h2 class="font-montserrat text-3xl lg:text-4xl font-black text-white">
+            ¿Querés más contenido de bienestar?
+          </h2>
+          <p class="font-quicksand text-xl text-white/80 max-w-xl mx-auto">
+            Contactanos por WhatsApp para recibir tips personalizados y estar al día con nuestros artículos.
+          </p>
+          <div class="flex flex-col sm:flex-row gap-4 justify-center">
+            <PrimaryButton
+              href="https://wa.me/5491168271296?text=Hola,%20me%20gustaría%20recibir%20contenido%20sobre%20bienestar%20y%20salud"
+              text="Contactar por WhatsApp"
+              icon="whatsapp"
+              variant="whatsapp"
+              size="lg"
+              target="_blank"
+              rel="noopener noreferrer"
+            />
+            <PrimaryButton
+              href="https://instagram.com/walter.entrenamiento"
+              text="Seguir en Instagram"
+              icon="instagram"
+              variant="secondary"
+              size="lg"
+              target="_blank"
+              rel="noopener noreferrer"
+              class="border-white/80 text-white hover:bg-white hover:text-[#701D2A] dark:border-white/80"
+            />
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+</Layout>

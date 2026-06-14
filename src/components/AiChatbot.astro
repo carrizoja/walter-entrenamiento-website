@@ -1,0 +1,623 @@
+---
+// AI Chatbot Component for Walter Entrenamiento
+import { quickQuestions } from "../data/questions.js";
+
+interface Props {
+  position?: "bottom-right" | "bottom-left" | "top-right" | "top-left";
+}
+
+const { position = "bottom-right" } = Astro.props;
+
+// Position classes
+const positionClasses = {
+  "bottom-right": "bottom-4 right-4",
+  "bottom-left": "bottom-4 left-4",
+  "top-right": "top-4 right-4",
+  "top-left": "top-4 left-4",
+};
+---
+
+<!-- AI Chatb        return "🥋 **Sistema de Grados - Taekwondo ITF**:\n\n**Cinturones Gup (Colores)**:\n⚪ 10° Gup - Cinturón Blanco (Principiante)\n🟡 9° Gup - Cinturón Blanco punta Amarilla\n🟡 8° Gup - Cinturón Amarillo\n🟢 7° Gup - Cinturón Amarillo punta Verde\n🟢 6° Gup - Cinturón Verde\n🔵 5° Gup - Cinturón Verde punta Azul\n🔵 4° Gup - Cinturón Azul\n🟤 3° Gup - Cinturón Azul punta Marrón\n🟤 2° Gup - Cinturón Marrón\n⚫ 1° Gup - Cinturón Marrón punta Negra\n\n**Cinturones Dan (Negro)**:\n⚫ 1° Dan - Bu Sabum (Instructor Asistente)\n⚫ 2° Dan - Bu Sabum (Instructor Asistente)\n⚫ 3° Dan - Bu Sabum (Instructor Asistente)\n⚫ 4° Dan - Sabum Nim (Instructor)\n⚫ 5° Dan - Sabum Nim (Instructor)\n⚫ 6° Dan - Sabum Nim (Instructor)\n⚫ 7° Dan - Master (Maestro)\n⚫ 8° Dan - Senior Master (Maestro Senior)\n⚫ 9° Dan - Grand Master (Gran Maestro)\n\n**📋 Requisitos para exámenes**:\n• Tiempo mínimo de práctica entre grados\n• Dominio de formas (Tul) correspondientes\n• Técnicas de defensa personal\n• Conocimiento teórico del Taekwondo\n• Examen práctico con instructor\n\n📅 **Próximos exámenes**: Contactanos para fechas\n📞 WhatsApp: +54 9 11 6595-1634\n\n¿Te interesa saber sobre algún grado específico?";t Button and Window -->
+<div id="ai-chatbot" class={`fixed ${positionClasses[position]} z-50`}>
+  <!-- Floating Chat Button -->
+  <button
+    id="chat-toggle"
+    class="w-12 h-12 md:w-14 md:h-14 bg-gradient-to-r from-[#FF6B35] to-[#C83B08] hover:from-[#C83B08] hover:to-[#701D2A] rounded-full shadow-lg hover:shadow-xl flex items-center justify-center transition-all duration-300 transform hover:scale-110 active:scale-95 relative"
+    aria-label="Abrir chat de asistente virtual"
+  >
+    <!-- Robot Icon -->
+    <svg
+      id="chat-icon"
+      class="w-7 h-7 md:w-8 md:h-8 text-white absolute transition-all duration-300"
+      style="opacity: 1; transform: rotate(0deg) scale(1);"
+      xmlns="http://www.w3.org/2000/svg"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      stroke-width="2"
+      stroke-linecap="round"
+      stroke-linejoin="round"
+      ><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g
+        id="SVGRepo_tracerCarrier"
+        stroke-linecap="round"
+        stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier">
+        <rect x="3" y="11" width="18" height="10" rx="2"></rect>
+        <circle cx="12" cy="5" r="2"></circle>
+        <path d="M12 7v4"></path>
+        <line x1="8" y1="16" x2="8" y2="16"></line>
+        <line x1="16" y1="16" x2="16" y2="16"></line>
+      </g></svg>
+    
+    <!-- Close Icon -->
+    <svg
+      id="close-icon"
+      class="w-6 h-6 md:w-7 md:h-7 text-white absolute transition-all duration-300"
+      style="opacity: 0; transform: rotate(180deg) scale(0.8);"
+      fill="none"
+      stroke="currentColor"
+      viewBox="0 0 24 24"
+      xmlns="http://www.w3.org/2000/svg"
+    >
+      <path
+        stroke-linecap="round"
+        stroke-linejoin="round"
+        stroke-width="2"
+        d="M6 18L18 6M6 6l12 12"></path>
+    </svg>
+
+    <!-- Notification Dot -->
+    <div
+      id="notification-dot"
+      class="absolute -top-0 -right-0 w-2 h-2 md:w-3 md:h-3 bg-green-500 rounded-full"
+    >
+      <div class="w-full h-full bg-green-400 rounded-full animate-ping"></div>
+    </div>
+  </button>
+
+  <!-- Chat Window -->
+  <div
+    id="chat-window"
+    class="hidden fixed bottom-16 right-4 md:bottom-20 md:right-4 w-80 md:w-96 h-96 bg-white dark:bg-gray-900 rounded-xl shadow-2xl border border-gray-200 dark:border-gray-700 flex flex-col overflow-hidden transform transition-all duration-300 opacity-0 scale-90"
+  >
+    <!-- Header -->
+    <div class="bg-gradient-to-r from-[#701D2A] to-[#8C2A3B] p-4 text-white">
+      <div class="flex items-center gap-3">
+        <div
+          class="w-10 h-10 bg-white/20 rounded-full flex items-center justify-center relative"
+        >
+          <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+            <path
+              d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"
+            ></path>
+          </svg>
+          <div
+            class="absolute -top-1 -right-1 w-3 h-3 bg-green-400 rounded-full"
+          >
+          </div>
+        </div>
+        <div>
+          <h3 class="font-montserrat font-semibold">Walter Assistant</h3>
+          <p class="text-sm opacity-90 font-quicksand">
+            Asistente Virtual de Entrenamiento
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Messages Container -->
+    <div id="messages-container" class="flex-1 overflow-y-auto p-4 space-y-4">
+      <!-- Initial message -->
+      <div class="flex justify-start">
+        <div
+          class="max-w-[80%] p-3 rounded-lg bg-gray-100 dark:bg-gray-800 text-gray-900 dark:text-white rounded-bl-none"
+        >
+          <p class="text-sm font-quicksand">
+            ¡Hola! Soy el asistente virtual de Walter Entrenamiento.
+            Estoy aquí para ayudarte con información sobre entrenamiento personalizado,
+            masajes terapéuticos, acompañamiento y nuestros servicios. ¿En qué
+            puedo ayudarte hoy?
+          </p>
+          <p class="text-xs opacity-70 mt-1" id="initial-time"></p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Quick Questions (shown initially) -->
+    <div
+      id="quick-questions"
+      class="p-4 border-t border-gray-200 dark:border-gray-700"
+    >
+      <p class="text-xs text-gray-500 dark:text-gray-400 mb-2 font-quicksand">
+        Preguntas frecuentes:
+      </p>
+      <div class="flex flex-wrap gap-2">
+        {
+          quickQuestions.map((q) => (
+            <button
+              class="quick-question text-xs bg-gray-100 dark:bg-gray-800 dark:text-white hover:bg-[#FF6B35] hover:text-white dark:hover:bg-[#FF6B35] px-2 py-1 rounded-full transition-colors font-quicksand"
+              data-question={q.question}
+            >
+              {q.text}
+            </button>
+          ))
+        }
+      </div>
+    </div>
+
+    <!-- Typing Indicator (hidden by default) -->
+    <div id="typing-indicator" class="hidden px-4 pb-2">
+      <div class="flex justify-start">
+        <div
+          class="bg-gray-100 dark:bg-gray-800 p-3 rounded-lg rounded-bl-none"
+        >
+          <div class="flex space-x-1">
+            <div class="w-2 h-2 bg-gray-400 rounded-full animate-bounce"></div>
+            <div
+              class="w-2 h-2 bg-gray-400 rounded-full animate-bounce"
+              style="animation-delay: 0.1s;"
+            >
+            </div>
+            <div
+              class="w-2 h-2 bg-gray-400 rounded-full animate-bounce"
+              style="animation-delay: 0.2s;"
+            >
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Input Area -->
+    <div class="p-4 border-t border-gray-200 dark:border-gray-700">
+      <div class="flex gap-2">
+        <input
+          type="text"
+          id="chat-input"
+          placeholder="Escribe tu pregunta..."
+          class="flex-1 px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#FF6B35] dark:bg-gray-800 dark:text-white text-sm font-quicksand"
+        />
+        <button
+          id="send-button"
+          class="px-3 py-2 bg-[#FF6B35] hover:bg-[#C83B08] disabled:bg-gray-300 text-white rounded-lg transition-colors"
+        >
+          <svg
+            class="w-4 h-4"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"></path>
+          </svg>
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  // @ts-nocheck
+  class WalterChatbot {
+    constructor() {
+      this.isOpen = false;
+      this.messageCount = 1;
+      this.isTyping = false;
+
+      // DOM element properties will be initialized in initializeElements
+      this.toggleButton = null;
+      this.chatWindow = null;
+      this.messagesContainer = null;
+      this.chatInput = null;
+      this.sendButton = null;
+      this.quickQuestions = null;
+      this.typingIndicator = null;
+      this.notificationDot = null;
+      this.chatIcon = null;
+      this.closeIcon = null;
+
+      this.initializeElements();
+      this.bindEvents();
+      this.setInitialTime();
+    }
+
+    initializeElements() {
+      this.toggleButton = document.getElementById("chat-toggle");
+      this.chatWindow = document.getElementById("chat-window");
+      this.messagesContainer = document.getElementById("messages-container");
+      this.chatInput = document.getElementById("chat-input");
+      this.sendButton = document.getElementById("send-button");
+      this.quickQuestions = document.getElementById("quick-questions");
+      this.typingIndicator = document.getElementById("typing-indicator");
+      this.notificationDot = document.getElementById("notification-dot");
+      this.chatIcon = document.getElementById("chat-icon");
+      this.closeIcon = document.getElementById("close-icon");
+    }
+
+    bindEvents() {
+      if (this.toggleButton)
+        this.toggleButton.addEventListener("click", () => this.toggleChat());
+      if (this.sendButton)
+        this.sendButton.addEventListener("click", () => this.sendMessage());
+      if (this.chatInput) {
+        this.chatInput.addEventListener("keypress", (e) => {
+          if (e.key === "Enter") this.sendMessage();
+        });
+      }
+
+      // Quick questions
+      document.querySelectorAll(".quick-question").forEach((button) => {
+        button.addEventListener("click", (e) => {
+          const question = e.target.getAttribute("data-question");
+          if (this.chatInput && question) {
+            this.chatInput.value = question;
+            this.sendMessage();
+          }
+        });
+      });
+    }
+
+    setInitialTime() {
+      const now = new Date();
+      const timeString = now.toLocaleTimeString("es-AR", {
+        hour: "2-digit",
+        minute: "2-digit",
+      });
+      const initialTimeElement = document.getElementById("initial-time");
+      if (initialTimeElement) {
+        initialTimeElement.textContent = timeString;
+      }
+    }
+
+    toggleChat() {
+      this.isOpen = !this.isOpen;
+
+      if (this.isOpen) {
+        this.openChat();
+      } else {
+        this.closeChat();
+      }
+    }
+
+    openChat() {
+      if (this.chatWindow) this.chatWindow.classList.remove("hidden");
+      if (this.notificationDot) this.notificationDot.style.display = "none";
+
+      // Animate icon transition using inline styles
+      if (this.chatIcon) {
+        this.chatIcon.style.opacity = "0";
+        this.chatIcon.style.transform = "rotate(180deg) scale(0.8)";
+      }
+      if (this.closeIcon) {
+        this.closeIcon.style.opacity = "1";
+        this.closeIcon.style.transform = "rotate(0deg) scale(1)";
+      }
+
+      // Animate opening
+      setTimeout(() => {
+        if (this.chatWindow) {
+          this.chatWindow.classList.remove("opacity-0", "scale-90");
+          this.chatWindow.classList.add("opacity-100", "scale-100");
+        }
+      }, 10);
+    }
+
+    closeChat() {
+      if (this.chatWindow) {
+        this.chatWindow.classList.add("opacity-0", "scale-90");
+        this.chatWindow.classList.remove("opacity-100", "scale-100");
+      }
+
+      // Animate icon transition using inline styles
+      if (this.closeIcon) {
+        this.closeIcon.style.opacity = "0";
+        this.closeIcon.style.transform = "rotate(180deg) scale(0.8)";
+      }
+      if (this.chatIcon) {
+        this.chatIcon.style.opacity = "1";
+        this.chatIcon.style.transform = "rotate(0deg) scale(1)";
+      }
+
+      setTimeout(() => {
+        if (this.chatWindow) this.chatWindow.classList.add("hidden");
+        if (this.notificationDot) this.notificationDot.style.display = "block";
+      }, 300);
+    }
+
+    async sendMessage() {
+      if (!this.chatInput) return;
+
+      const message = this.chatInput.value.trim();
+      if (!message || this.isTyping) return;
+
+      // Add user message
+      this.addMessage(message, true);
+      this.chatInput.value = "";
+
+      // Hide quick questions after first message
+      if (this.messageCount === 2 && this.quickQuestions) {
+        this.quickQuestions.style.display = "none";
+      }
+
+      // Show typing indicator
+      this.showTyping();
+
+      // Get AI response
+      setTimeout(
+        async () => {
+          const response = await this.getAIResponse(message);
+          this.hideTyping();
+          this.addMessage(response, false);
+        },
+        1000 + Math.random() * 1000
+      );
+    }
+
+    addMessage(text, isUser) {
+      if (!this.messagesContainer) return;
+
+      const messageDiv = document.createElement("div");
+      messageDiv.className = `flex ${isUser ? "justify-end" : "justify-start"}`;
+
+      const now = new Date();
+      const timeString = now.toLocaleTimeString("es-AR", {
+        hour: "2-digit",
+        minute: "2-digit",
+      });
+
+      messageDiv.innerHTML = `
+        <div class="max-w-[80%] p-3 rounded-lg ${
+          isUser
+            ? "bg-[#FF6B35] text-white rounded-br-none"
+            : "bg-gray-100 dark:bg-gray-800 text-gray-900 dark:text-white rounded-bl-none"
+        }">
+          <p class="text-sm font-quicksand whitespace-pre-line">${text}</p>
+          <p class="text-xs opacity-70 mt-1">${timeString}</p>
+        </div>
+      `;
+
+      this.messagesContainer.appendChild(messageDiv);
+      this.scrollToBottom();
+      this.messageCount++;
+    }
+
+    showTyping() {
+      this.isTyping = true;
+      if (this.typingIndicator) this.typingIndicator.classList.remove("hidden");
+      this.scrollToBottom();
+    }
+
+    hideTyping() {
+      this.isTyping = false;
+      if (this.typingIndicator) this.typingIndicator.classList.add("hidden");
+    }
+
+    scrollToBottom() {
+      setTimeout(() => {
+        if (this.messagesContainer) {
+          this.messagesContainer.scrollTop =
+            this.messagesContainer.scrollHeight;
+        }
+      }, 100);
+    }
+
+    async getAIResponse(userMessage) {
+      const message = userMessage.toLowerCase();
+
+      // Servicios
+      if (
+        message.includes("servicio") ||
+        message.includes("que ofrec") ||
+        message.includes("que hac")
+      ) {
+        return "� **Servicios de Walter Entrenamiento**:\n\n🏋️ **Entrenamiento Personalizado**:\n• Planes adaptados a tus objetivos\n• Seguimiento individualizado\n• Entrenamiento funcional\n• Musculación y tonificación\n• Pérdida de peso\n• Aumento de masa muscular\n\n💆 **Masajes Terapéuticos**:\n• Masaje deportivo\n• Masaje de relajación\n• Masaje descontracturante\n• Drenaje linfático\n\n🤝 **Acompañamiento Terapéutico**:\n• Apoyo en procesos de recuperación\n• Motivación y seguimiento\n• Enfoque integral mente-cuerpo\n\n📞 Más info: +54 9 11 6827-1296";
+      }
+
+      // Horarios
+      if (
+        message.includes("horario") ||
+        message.includes("cuando") ||
+        message.includes("día") ||
+        message.includes("disponibilidad")
+      ) {
+        return "⏰ **Horarios de Atención**:\n\n📅 **Lunes a Viernes**: 7:00 - 21:00 h\n📅 **Sábados**: 8:00 - 14:00 h\n📅 **Domingos**: Cerrado\n\n✨ **Sesiones flexibles**: Coordinamos horarios según tu disponibilidad\n\n📞 WhatsApp: +54 9 11 6827-1296\n📧 Email: walter.entrenamiento@gmail.com\n\n¡Reservá tu sesión!";
+      }
+
+      // Precios
+      if (
+        message.includes("precio") ||
+        message.includes("costo") ||
+        message.includes("cuota") ||
+        message.includes("cuanto cuesta") ||
+        message.includes("tarifa")
+      ) {
+        return "💰 **Precios y Planes**:\n\nLos precios varían según el servicio y frecuencia:\n\n🏋️ **Entrenamiento Personalizado**:\n• Plan personalizado según objetivos\n• Sesiones individuales o en pareja\n• Paquetes mensuales disponibles\n\n💆 **Masajes Terapéuticos**:\n• Sesiones de 60 minutos\n• Paquetes con descuento\n\n🤝 **Acompañamiento Terapéutico**:\n• Programas adaptados a cada necesidad\n\n💬 **Consultá por planes y promociones**:\n📞 WhatsApp: +54 9 11 6827-1296\n\n🎁 **Primera sesión de evaluación GRATUITA**";
+      }
+
+      // Ubicación y contacto
+      if (
+        message.includes("contacto") ||
+        message.includes("teléfono") ||
+        message.includes("whatsapp") ||
+        message.includes("donde") ||
+        message.includes("ubicación") ||
+        message.includes("dirección") ||
+        message.includes("dónde")
+      ) {
+        return "📞 **Contacto Walter Entrenamiento**:\n\n📱 **WhatsApp**: +54 9 11 6827-1296\n� **Email**: walter.entrenamiento@gmail.com\n� **Ubicación**: Almagro, CABA\nBuenos Aires, Argentina\n\n🏢 **Zonas de atención**:\n• Entrenamientos en gimnasio (Almagro)\n• Sesiones a domicilio (consultar cobertura)\n• Masajes en consultorio o a domicilio\n\n💬 ¡Escribime por WhatsApp para coordinar!";
+      }
+
+      // Beneficios del entrenamiento
+      if (
+        message.includes("beneficio") ||
+        message.includes("para qué sirve") ||
+        message.includes("por qué") ||
+        message.includes("ventaja") ||
+        message.includes("que gano")
+      ) {
+        return "🌟 **Beneficios del Entrenamiento Personalizado**:\n\n💪 **Físicos**:\n• Mejora de fuerza y resistencia\n• Tonificación muscular\n• Pérdida de grasa corporal\n• Mayor flexibilidad\n• Mejor postura\n• Prevención de lesiones\n\n🧠 **Mentales**:\n• Reducción del estrés\n• Mayor autoestima\n• Mejora del ánimo\n• Disciplina y constancia\n• Mejor calidad de sueño\n\n❤️ **Salud General**:\n• Control de peso\n• Salud cardiovascular\n• Fortalecimiento del sistema inmune\n• Más energía en el día a día\n\n✨ Con **30+ años de experiencia**, te guío hacia tus objetivos de forma segura y efectiva.";
+      }
+
+      // Masajes
+      if (
+        message.includes("masaje") ||
+        message.includes("terapéutico") ||
+        message.includes("terapeutico") ||
+        message.includes("descontracturante") ||
+        message.includes("relajación") ||
+        message.includes("relajacion")
+      ) {
+        return "💆 **Masajes Terapéuticos**:\n\n🔥 **Masaje Deportivo**:\n• Pre y post entrenamiento\n• Recuperación muscular\n• Prevención de lesiones\n\n😌 **Masaje de Relajación**:\n• Reducción del estrés\n• Bienestar general\n• Mejora del sueño\n\n💪 **Masaje Descontracturante**:\n• Alivio de tensiones musculares\n• Tratamiento de contracturas\n• Mejora de la movilidad\n\n🌊 **Drenaje Linfático**:\n• Eliminación de toxinas\n• Reducción de retención de líquidos\n• Mejora de la circulación\n\n� **Duración**: Sesiones de 60 minutos\n📍 **Modalidad**: En consultorio o a domicilio\n📞 Reservá: +54 9 11 6827-1296";
+      }
+
+      // Acompañamiento terapéutico
+      if (
+        message.includes("acompañamiento") ||
+        message.includes("acompanamiento") ||
+        message.includes("terapéutico") ||
+        message.includes("terapeutico") ||
+        message.includes("apoyo")
+      ) {
+        return "🤝 **Acompañamiento Terapéutico**:\n\n✨ Un servicio integral que combina:\n\n💪 **Apoyo Físico**:\n• Ejercicios adaptados a tu condición\n• Recuperación post-operatoria\n• Actividad física para adultos mayores\n\n🧠 **Apoyo Emocional**:\n• Motivación constante\n• Seguimiento personalizado\n• Enfoque en el bienestar integral\n\n🎯 **Ideal para**:\n• Procesos de recuperación\n• Personas con movilidad reducida\n• Adultos mayores\n• Rehabilitación\n• Mejora de la calidad de vida\n\n🌟 Con más de **30 años de experiencia** en el acompañamiento de personas en diferentes etapas de su vida.\n\n📞 Consultá tu caso: +54 9 11 6827-1296";
+      }
+
+      // Experiencia
+      if (
+        message.includes("experiencia") ||
+        message.includes("walter") ||
+        message.includes("quién es") ||
+        message.includes("quien es") ||
+        message.includes("sobre ti") ||
+        message.includes("sobre vos")
+      ) {
+        return "👨‍⚕️ **Sobre Walter**:\n\n✨ **Más de 30 años de experiencia** transformando vidas a través del movimiento, la disciplina y el bienestar integral.\n\n🏆 **Especialidades**:\n• Entrenamiento personalizado\n• Masajes terapéuticos\n• Acompañamiento terapéutico\n• Preparación física deportiva\n• Rehabilitación funcional\n\n� **Filosofía**:\n\"Un enfoque integral adaptado a tus necesidades. Cuerpo y mente en armonía.\"\n\n📚 **Formación**:\n• Profesor de Educación Física\n• Especialista en masajes terapéuticos\n• Experiencia en acompañamiento terapéutico\n\n� **Compromiso**: Resultados reales con seguimiento personalizado.\n\n📞 Conocé más: +54 9 11 6827-1296";
+      }
+
+      // Primera sesión
+      if (
+        message.includes("primera") ||
+        message.includes("empezar") ||
+        message.includes("comenzar") ||
+        message.includes("nuevo") ||
+        message.includes("principiante") ||
+        message.includes("inicio")
+      ) {
+        return "🎯 **Tu Primera Sesión con Walter**:\n\n✨ **Primera evaluación GRATUITA**:\n\n📋 **En esta sesión veremos**:\n• Tus objetivos y metas\n• Evaluación física inicial\n• Historial de salud y lesiones\n• Plan personalizado propuesto\n• Resolución de dudas\n\n👕 **Qué traer**:\n• Ropa cómoda para entrenar\n• Zapatillas deportivas\n• Botella de agua\n• Toalla\n• ¡Muchas ganas!\n\n📅 **Cómo reservar**:\n1. Escribime por WhatsApp\n2. Coordinamos día y horario\n3. Agendamos tu evaluación gratuita\n\n📞 **WhatsApp**: +54 9 11 6827-1296\n\n¿Cuál es tu principal objetivo?";
+      }
+
+      // Saludos
+      if (
+        message.includes("hola") ||
+        message.includes("buenos días") ||
+        message.includes("buenas tardes") ||
+        message.includes("buenas noches") ||
+        message.includes("hey")
+      ) {
+        return "¡Hola! 👋💪 ¡Bienvenido/a a **Walter Entrenamiento**!\n\nSoy el asistente virtual y estoy aquí para ayudarte.\n\n🌟 **Más de 30 años** transformando vidas a través del movimiento y el bienestar integral.\n\n🏋️ **Servicios**:\n• Entrenamiento Personalizado\n• Masajes Terapéuticos\n• Acompañamiento Terapéutico\n\n📍 **Ubicación**: Almagro, CABA\n📞 **WhatsApp**: +54 9 11 6827-1296\n\n¿En qué puedo ayudarte hoy?";
+      }
+
+      // Quick single-word responses
+      if (message.trim() === "horarios" || message.trim() === "horario") {
+        return "⏰ **Horarios**:\n\n📅 **Lunes a Viernes**: 7:00 - 21:00 h\n📅 **Sábados**: 8:00 - 14:00 h\n📅 **Domingos**: Cerrado\n\n📞 WhatsApp: +54 9 11 6827-1296";
+      }
+
+      if (message.trim() === "precios" || message.trim() === "precio") {
+        return "💰 **Consulta de Precios**:\n\nLos precios varían según el servicio:\n\n🏋️ Entrenamiento Personalizado\n💆 Masajes Terapéuticos\n🤝 Acompañamiento\n\n🎁 **Primera evaluación GRATUITA**\n\n📞 WhatsApp: +54 9 11 6827-1296";
+      }
+
+      if (message.trim() === "contacto" || message.trim() === "whatsapp") {
+        return "📞 **Contacto**:\n\n📱 **WhatsApp**: +54 9 11 6827-1296\n📧 **Email**: walter.entrenamiento@gmail.com\n📍 **Ubicación**: Almagro, CABA\n\n💬 ¡Escribime!";
+      }
+
+      if (message.trim() === "ubicación" || message.trim() === "ubicacion" || message.trim() === "dónde" || message.trim() === "donde") {
+        return "📍 **Ubicación**:\n\n🏢 **Almagro, CABA**\nBuenos Aires, Argentina\n\n🚇 **Cómo llegar**: Fácil acceso en transporte público\n\n� Para dirección exacta: +54 9 11 6827-1296";
+      }
+
+      if (message.trim() === "servicios" || message.trim() === "servicio") {
+        return "💪 **Servicios**:\n\n🏋️ **Entrenamiento Personalizado**\n💆 **Masajes Terapéuticos**\n🤝 **Acompañamiento Terapéutico**\n\n✨ Enfoque integral adaptado a tus necesidades\n\n📞 Info: +54 9 11 6827-1296";
+      }
+
+      // Default response
+      return "¡Gracias por tu mensaje! 💪\n\nPara darte la mejor información, contactame directamente:\n\n📱 **WhatsApp**: +54 9 11 6827-1296 (respuesta inmediata)\n📧 **Email**: walter.entrenamiento@gmail.com\n📍 **Ubicación**: Almagro, CABA\n\n💬 También podés preguntarme sobre:\n• Horarios de atención\n• Servicios (entrenamiento, masajes, acompañamiento)\n• Precios y planes\n• Cómo empezar\n• Beneficios del entrenamiento\n\n¿En qué más puedo ayudarte?";
+    }
+  }
+
+  // Initialize chatbot when DOM is loaded
+  document.addEventListener("DOMContentLoaded", () => {
+    new WalterChatbot();
+  });
+</script>
+
+<style>
+  /* Custom animations and styles */
+  @keyframes fadeInUp {
+    from {
+      opacity: 0;
+      transform: translateY(10px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  #chat-window {
+    animation: fadeInUp 0.3s ease-out;
+  }
+
+  /* Scrollbar styling */
+  #messages-container {
+    scrollbar-width: thin;
+    scrollbar-color: rgba(156, 163, 175, 0.5) transparent;
+  }
+
+  #messages-container::-webkit-scrollbar {
+    width: 4px;
+  }
+
+  #messages-container::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  #messages-container::-webkit-scrollbar-thumb {
+    background-color: rgba(156, 163, 175, 0.5);
+    border-radius: 2px;
+  }
+
+  #messages-container::-webkit-scrollbar-thumb:hover {
+    background-color: rgba(156, 163, 175, 0.7);
+  }
+
+  /* Bounce animation for notification dot */
+  @keyframes pulse {
+    0%,
+    100% {
+      transform: scale(1);
+    }
+    50% {
+      transform: scale(1.2);
+    }
+  }
+
+  #notification-dot {
+    animation: pulse 2s infinite;
+  }
+
+  /* Typing indicator animation */
+  @keyframes bounce {
+    0%,
+    80%,
+    100% {
+      transform: translateY(0);
+    }
+    40% {
+      transform: translateY(-8px);
+    }
+  }
+
+  .animate-bounce {
+    animation: bounce 1s infinite;
+  }
+</style>

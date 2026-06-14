@@ -1,0 +1,451 @@
+---
+import Layout from '../layouts/Layout.astro';
+import PrimaryButton from '../components/ux/PrimaryButton.astro';
+---
+
+<Layout>
+
+  <!-- ============================================================
+       HERO
+       ============================================================ -->
+  <section class="relative pt-32 pb-0 bg-white dark:bg-[#0f0508] overflow-hidden">
+    <div class="absolute inset-0 pointer-events-none" aria-hidden="true">
+      <div class="absolute -top-32 -right-32 w-[600px] h-[600px] rounded-full bg-[#FF6B35]/7 dark:bg-[#FF6B35]/10 blur-[100px]"></div>
+      <div class="absolute bottom-0 -left-24 w-[400px] h-[400px] rounded-full bg-[#701D2A]/6 dark:bg-[#701D2A]/15 blur-[80px]"></div>
+    </div>
+
+    <div class="relative z-10 max-w-7xl mx-auto px-6 lg:px-8 pb-24">
+      <div class="text-center space-y-6 max-w-3xl mx-auto">
+        <div class="inline-flex items-center gap-2 bg-[#FF6B35]/10 dark:bg-[#FF6B35]/15 border border-[#FF6B35]/20 px-4 py-1.5 rounded-full">
+          <span class="w-1.5 h-1.5 rounded-full bg-[#FF6B35] animate-pulse-glow" aria-hidden="true"></span>
+          <span class="font-montserrat text-xs font-bold text-[#C83B08] dark:text-[#FF6B35] uppercase tracking-widest">Qué ofrezco</span>
+        </div>
+        <h1 class="font-montserrat text-5xl lg:text-7xl font-black leading-[0.95] text-gray-900 dark:text-white">
+          Nuestros <span class="bg-gradient-to-r from-[#FF6B35] via-[#C83B08] to-[#701D2A] bg-clip-text text-transparent">Servicios</span>
+        </h1>
+        <p class="font-quicksand text-xl text-gray-600 dark:text-gray-400 leading-relaxed">
+          Un enfoque integral de salud y bienestar, adaptado exactamente a tus necesidades.
+        </p>
+      </div>
+    </div>
+
+    <div aria-hidden="true">
+      <svg viewBox="0 0 1440 80" fill="none" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none" class="w-full h-16 lg:h-20">
+        <path d="M0 40C240 80 480 0 720 40C960 80 1200 0 1440 40V80H0V40Z" class="fill-gray-50 dark:fill-[#130308]"/>
+      </svg>
+    </div>
+  </section>
+
+  <!-- ============================================================
+       ENTRENAMIENTOS PERSONALIZADOS
+       ============================================================ -->
+  <section id="entrenamientos" class="py-24 bg-gray-50 dark:bg-[#130308] scroll-mt-24">
+    <div class="max-w-7xl mx-auto px-6 lg:px-8">
+      <div class="grid lg:grid-cols-2 gap-16 items-center">
+
+        <!-- Image -->
+        <div class="order-2 lg:order-1 relative">
+          <div class="absolute -inset-2 rounded-3xl bg-gradient-to-br from-[#FF6B35]/25 to-[#701D2A]/20 blur-sm" aria-hidden="true"></div>
+          <img
+            src="https://res.cloudinary.com/dx6sjvmg9/image/upload/v1759943485/walter_yaamqr.png"
+            alt="Walter realizando una plancha — entrenamiento personalizado"
+            class="relative rounded-2xl shadow-[0_20px_60px_rgba(0,0,0,0.15)] dark:shadow-[0_20px_60px_rgba(0,0,0,0.5)] w-full h-auto object-cover"
+            loading="lazy"
+            width="600"
+            height="450"
+          />
+        </div>
+
+        <!-- Content -->
+        <div class="order-1 lg:order-2 space-y-6">
+          <div class="inline-flex items-center gap-2 bg-[#FF6B35]/10 border border-[#FF6B35]/20 px-4 py-1.5 rounded-full">
+            <span class="w-1.5 h-1.5 rounded-full bg-[#FF6B35]" aria-hidden="true"></span>
+            <span class="font-montserrat text-xs font-bold text-[#FF6B35] uppercase tracking-widest">Servicio Destacado</span>
+          </div>
+          <h2 class="font-montserrat text-4xl lg:text-5xl font-black text-gray-900 dark:text-white leading-tight">
+            Entrenamientos Personalizados
+          </h2>
+          <p class="font-quicksand text-lg text-gray-700 dark:text-gray-300 leading-relaxed">
+            Rutinas diseñadas exclusivamente para vos, adaptadas a tu edad, condición física y objetivos personales. Cada sesión es una experiencia única enfocada en tu progreso.
+          </p>
+
+          <ul class="space-y-4">
+            {[
+              { title: 'Evaluación Inicial Completa', desc: 'Análisis de tu condición física, objetivos y limitaciones' },
+              { title: 'Plan Personalizado', desc: 'Rutinas adaptadas que evolucionan con tu progreso' },
+              { title: 'Seguimiento Continuo', desc: 'Monitoreo de resultados y ajustes según necesites' },
+              { title: 'Atención Individual', desc: 'Supervisión personalizada en cada ejercicio' },
+            ].map(item => (
+              <li class="flex items-start gap-4">
+                <div class="shrink-0 w-6 h-6 rounded-full bg-gradient-to-br from-[#FF6B35] to-[#C83B08] flex items-center justify-center mt-0.5">
+                  <svg class="w-3.5 h-3.5 text-white" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24" aria-hidden="true">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/>
+                  </svg>
+                </div>
+                <div>
+                  <h4 class="font-montserrat font-bold text-gray-900 dark:text-white text-[0.95rem]">{item.title}</h4>
+                  <p class="font-quicksand text-gray-600 dark:text-gray-400 text-sm">{item.desc}</p>
+                </div>
+              </li>
+            ))}
+          </ul>
+
+          <PrimaryButton
+            href="https://wa.me/5491168271296?text=Hola,%20me%20interesa%20el%20servicio%20de%20Entrenamientos%20Personalizados"
+            text="Reservar Sesión"
+            icon="whatsapp"
+            variant="whatsapp"
+            size="lg"
+            target="_blank"
+            rel="noopener noreferrer"
+          />
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================
+       ENTRENAMIENTOS GRUPALES
+       ============================================================ -->
+  <section id="grupales" class="py-24 bg-white dark:bg-[#0f0508] scroll-mt-24">
+    <div class="max-w-7xl mx-auto px-6 lg:px-8">
+      <div class="grid lg:grid-cols-2 gap-16 items-center">
+
+        <!-- Content -->
+        <div class="space-y-6">
+          <div class="inline-flex items-center gap-2 bg-[#701D2A]/10 border border-[#701D2A]/20 px-4 py-1.5 rounded-full">
+            <span class="w-1.5 h-1.5 rounded-full bg-[#701D2A] dark:bg-[#C56C7A]" aria-hidden="true"></span>
+            <span class="font-montserrat text-xs font-bold text-[#701D2A] dark:text-[#C56C7A] uppercase tracking-widest">Energía Colectiva</span>
+          </div>
+          <h2 class="font-montserrat text-4xl lg:text-5xl font-black text-gray-900 dark:text-white leading-tight">
+            Entrenamientos Grupales
+          </h2>
+          <p class="font-quicksand text-lg text-gray-700 dark:text-gray-300 leading-relaxed">
+            Sesiones dinámicas en grupo que fomentan la motivación, el compañerismo y el compromiso. Ideal para quienes disfrutan de la energía colectiva y buscan resultados en comunidad.
+          </p>
+
+          <ul class="space-y-4">
+            {[
+              { title: 'Grupos Reducidos', desc: 'Máximo 6 personas para atención personalizada' },
+              { title: 'Motivación Compartida', desc: 'La energía del grupo impulsa tu rendimiento' },
+              { title: 'Niveles Adaptados', desc: 'Grupos organizados por edad y condición física' },
+              { title: 'Comunidad de Apoyo', desc: 'Construí relaciones y avanzá junto a otros' },
+            ].map(item => (
+              <li class="flex items-start gap-4">
+                <div class="shrink-0 w-6 h-6 rounded-full bg-gradient-to-br from-[#701D2A] to-[#8C2A3B] flex items-center justify-center mt-0.5">
+                  <svg class="w-3.5 h-3.5 text-white" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24" aria-hidden="true">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/>
+                  </svg>
+                </div>
+                <div>
+                  <h4 class="font-montserrat font-bold text-gray-900 dark:text-white text-[0.95rem]">{item.title}</h4>
+                  <p class="font-quicksand text-gray-600 dark:text-gray-400 text-sm">{item.desc}</p>
+                </div>
+              </li>
+            ))}
+          </ul>
+
+          <PrimaryButton
+            href="https://wa.me/5491168271296?text=Hola,%20me%20interesa%20el%20servicio%20de%20Entrenamientos%20Grupales"
+            text="Unirme a un Grupo"
+            icon="whatsapp"
+            variant="primary"
+            size="lg"
+            target="_blank"
+            rel="noopener noreferrer"
+          />
+        </div>
+
+        <!-- Visual placeholder -->
+        <div class="relative">
+          <div class="absolute -inset-2 rounded-3xl bg-gradient-to-br from-[#701D2A]/25 to-[#C56C7A]/15 blur-sm" aria-hidden="true"></div>
+          <div class="relative aspect-[4/3] rounded-2xl overflow-hidden shadow-[0_20px_60px_rgba(0,0,0,0.15)] dark:shadow-[0_20px_60px_rgba(0,0,0,0.5)]">
+            <img
+              src="https://res.cloudinary.com/dx6sjvmg9/image/upload/v1777044690/IMG-20250708-WA0023_o5yxgf.jpg"
+              alt="Entrenamientos Grupales"
+              class="w-full h-full object-cover"
+              loading="lazy"
+              width="600"
+              height="450"
+            />
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================
+       ACOMPAÑAMIENTO TERAPÉUTICO
+       ============================================================ -->
+  <section id="terapeutico" class="py-24 bg-gray-50 dark:bg-[#130308] scroll-mt-24">
+    <div class="max-w-7xl mx-auto px-6 lg:px-8">
+      <div class="grid lg:grid-cols-2 gap-16 items-center">
+
+        <!-- Visual placeholder -->
+        <div class="order-2 lg:order-1 relative">
+          <div class="absolute -inset-2 rounded-3xl bg-gradient-to-br from-[#C56C7A]/25 to-[#701D2A]/20 blur-sm" aria-hidden="true"></div>
+          <div class="relative aspect-[4/3] rounded-2xl overflow-hidden shadow-[0_20px_60px_rgba(0,0,0,0.15)] dark:shadow-[0_20px_60px_rgba(0,0,0,0.5)]">
+            <img
+              src="https://res.cloudinary.com/dx6sjvmg9/image/upload/v1777250458/paciente_dllqws.png"
+              alt="Acompañamiento Terapéutico"
+              class="w-full h-full object-cover"
+              loading="lazy"
+              width="600"
+              height="450"
+            />
+          </div>
+        </div>
+
+        <!-- Content -->
+        <div class="order-1 lg:order-2 space-y-6">
+          <div class="inline-flex items-center gap-2 bg-[#C56C7A]/10 border border-[#C56C7A]/20 px-4 py-1.5 rounded-full">
+            <span class="w-1.5 h-1.5 rounded-full bg-[#C56C7A]" aria-hidden="true"></span>
+            <span class="font-montserrat text-xs font-bold text-[#8C2A3B] dark:text-[#C56C7A] uppercase tracking-widest">Bienestar Integral</span>
+          </div>
+          <h2 class="font-montserrat text-4xl lg:text-5xl font-black text-gray-900 dark:text-white leading-tight">
+            Acompañamiento Terapéutico
+          </h2>
+          <p class="font-quicksand text-lg text-gray-700 dark:text-gray-300 leading-relaxed">
+            Apoyo integral que va más allá del entrenamiento físico, cuidando también tu bienestar emocional y mental. Un acompañamiento cercano y empático en tu proceso de transformación.
+          </p>
+
+          <ul class="space-y-4">
+            {[
+              { title: 'Escucha Activa', desc: 'Espacio seguro para expresar tus inquietudes' },
+              { title: 'Enfoque Holístico', desc: 'Atención a tu salud física y emocional' },
+              { title: 'Motivación Constante', desc: 'Apoyo continuo en cada etapa del proceso' },
+              { title: 'Conexión Empática', desc: 'Relación de confianza y respeto mutuo' },
+            ].map(item => (
+              <li class="flex items-start gap-4">
+                <div class="shrink-0 w-6 h-6 rounded-full bg-gradient-to-br from-[#C56C7A] to-[#8C2A3B] flex items-center justify-center mt-0.5">
+                  <svg class="w-3.5 h-3.5 text-white" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24" aria-hidden="true">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/>
+                  </svg>
+                </div>
+                <div>
+                  <h4 class="font-montserrat font-bold text-gray-900 dark:text-white text-[0.95rem]">{item.title}</h4>
+                  <p class="font-quicksand text-gray-600 dark:text-gray-400 text-sm">{item.desc}</p>
+                </div>
+              </li>
+            ))}
+          </ul>
+
+          <PrimaryButton
+            href="https://wa.me/5491168271296?text=Hola,%20me%20interesa%20el%20servicio%20de%20Acompañamiento%20Terapéutico"
+            text="Consultar Disponibilidad"
+            icon="whatsapp"
+            variant="whatsapp"
+            size="lg"
+            target="_blank"
+            rel="noopener noreferrer"
+          />
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================
+       SERVICIOS COMPLEMENTARIOS
+       ============================================================ -->
+  <section class="py-24 bg-white dark:bg-[#0f0508]">
+    <div class="max-w-7xl mx-auto px-6 lg:px-8">
+      <div class="text-center mb-16">
+        <div class="inline-flex items-center gap-2 bg-[#FF6B35]/10 border border-[#FF6B35]/20 px-4 py-1.5 rounded-full mb-5">
+          <span class="w-1.5 h-1.5 rounded-full bg-[#FF6B35]" aria-hidden="true"></span>
+          <span class="font-montserrat text-xs font-bold text-[#C83B08] dark:text-[#FF6B35] uppercase tracking-widest">Más servicios</span>
+        </div>
+        <h2 class="font-montserrat text-4xl lg:text-5xl font-black text-gray-900 dark:text-white leading-tight">
+          Servicios <span class="bg-gradient-to-r from-[#FF6B35] to-[#C83B08] bg-clip-text text-transparent">Complementarios</span>
+        </h2>
+        <p class="font-quicksand text-lg text-gray-600 dark:text-gray-400 max-w-2xl mx-auto mt-4">
+          Potenciá tu bienestar con nuestros servicios especializados.
+        </p>
+      </div>
+
+      <div class="grid md:grid-cols-3 gap-7">
+        <!-- Masajes -->
+        <div id="masajes" class="group relative bg-gray-50 dark:bg-[#1a0509] rounded-2xl overflow-hidden border border-gray-100 dark:border-white/5 hover:border-[#FF6B35]/25 scroll-mt-24 transition-all duration-400 hover:shadow-[0_12px_40px_rgba(255,107,53,0.10)] hover:-translate-y-1">
+          <div class="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-[#FF6B35] to-[#C83B08]" aria-hidden="true"></div>
+          <div class="p-7 space-y-5">
+            <div class="w-13 h-13 w-12 h-12 rounded-2xl bg-gradient-to-br from-[#FF6B35] to-[#C83B08] flex items-center justify-center group-hover:scale-110 group-hover:shadow-[0_4px_16px_rgba(255,107,53,0.40)] transition-all duration-300">
+              <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" stroke-width="1.75" viewBox="0 0 24 24" aria-hidden="true">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M7 11.5V14m0-2.5v-6a1.5 1.5 0 113 0m-3 6a1.5 1.5 0 00-3 0v2a7.5 7.5 0 0015 0v-5a1.5 1.5 0 00-3 0m-6-3V11m0-5.5v-1a1.5 1.5 0 013 0v1m0 0V11m0-5.5a1.5 1.5 0 013 0v3m0 0V11"/>
+              </svg>
+            </div>
+            <h3 class="font-montserrat text-xl font-black text-gray-900 dark:text-white">Masajes Especializados</h3>
+            <p class="font-quicksand text-gray-600 dark:text-gray-400 leading-relaxed text-sm">
+              Técnicas de masoterapia para aliviar tensiones, mejorar la circulación y complementar tu proceso de recuperación.
+            </p>
+            <ul class="space-y-2">
+              {['Masajes descontracturantes', 'Masajes deportivos', 'Masajes de recuperación'].map(item => (
+                <li class="flex items-center gap-2 font-quicksand text-sm text-gray-600 dark:text-gray-400">
+                  <svg class="w-4 h-4 text-[#FF6B35] shrink-0" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24" aria-hidden="true">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/>
+                  </svg>
+                  {item}
+                </li>
+              ))}
+            </ul>
+            <a
+              href="https://wa.me/5491168271296?text=Hola,%20me%20interesa%20el%20servicio%20de%20Masajes%20Especializados"
+              target="_blank"
+              rel="noopener noreferrer"
+              class="btn-shimmer group/btn inline-flex items-center justify-center w-full gap-2 px-5 py-3 bg-gradient-to-r from-[#FF6B35] to-[#C83B08] text-white font-montserrat font-bold text-sm rounded-xl hover:shadow-[0_4px_20px_rgba(255,107,53,0.45)] hover:scale-[1.02] transition-all duration-300"
+            >
+              Reservar Sesión
+              <svg class="w-4 h-4 transition-transform duration-300 group-hover/btn:translate-x-1" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24" aria-hidden="true">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M17 8l4 4m0 0l-4 4m4-4H3"/>
+              </svg>
+            </a>
+          </div>
+        </div>
+
+        <!-- Rehabilitación -->
+        <div id="rehabilitacion" class="group relative bg-gray-50 dark:bg-[#1a0509] rounded-2xl overflow-hidden border border-gray-100 dark:border-white/5 hover:border-[#701D2A]/25 scroll-mt-24 transition-all duration-400 hover:shadow-[0_12px_40px_rgba(112,29,42,0.10)] hover:-translate-y-1">
+          <div class="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-[#701D2A] to-[#8C2A3B]" aria-hidden="true"></div>
+          <div class="p-7 space-y-5">
+            <div class="w-12 h-12 rounded-2xl bg-gradient-to-br from-[#701D2A] to-[#8C2A3B] flex items-center justify-center group-hover:scale-110 group-hover:shadow-[0_4px_16px_rgba(112,29,42,0.40)] transition-all duration-300">
+              <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" stroke-width="1.75" viewBox="0 0 24 24" aria-hidden="true">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/>
+              </svg>
+            </div>
+            <h3 class="font-montserrat text-xl font-black text-gray-900 dark:text-white">Rehabilitación</h3>
+            <p class="font-quicksand text-gray-600 dark:text-gray-400 leading-relaxed text-sm">
+              Programas diseñados para recuperación de lesiones y mejora de movilidad, con seguimiento profesional personalizado.
+            </p>
+            <ul class="space-y-2">
+              {['Recuperación post-lesión', 'Mejora de movilidad', 'Fortalecimiento progresivo'].map(item => (
+                <li class="flex items-center gap-2 font-quicksand text-sm text-gray-600 dark:text-gray-400">
+                  <svg class="w-4 h-4 text-[#701D2A] dark:text-[#C56C7A] shrink-0" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24" aria-hidden="true">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/>
+                  </svg>
+                  {item}
+                </li>
+              ))}
+            </ul>
+            <a
+              href="https://wa.me/5491168271296?text=Hola,%20me%20interesa%20el%20servicio%20de%20Rehabilitación"
+              target="_blank"
+              rel="noopener noreferrer"
+              class="btn-shimmer group/btn inline-flex items-center justify-center w-full gap-2 px-5 py-3 bg-gradient-to-r from-[#701D2A] to-[#8C2A3B] text-white font-montserrat font-bold text-sm rounded-xl hover:shadow-[0_4px_20px_rgba(112,29,42,0.45)] hover:scale-[1.02] transition-all duration-300"
+            >
+              Consultar
+              <svg class="w-4 h-4 transition-transform duration-300 group-hover/btn:translate-x-1" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24" aria-hidden="true">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M17 8l4 4m0 0l-4 4m4-4H3"/>
+              </svg>
+            </a>
+          </div>
+        </div>
+
+        <!-- Terapias Complementarias -->
+        <div id="terapias" class="group relative bg-gray-50 dark:bg-[#1a0509] rounded-2xl overflow-hidden border border-gray-100 dark:border-white/5 hover:border-[#C56C7A]/25 scroll-mt-24 transition-all duration-400 hover:shadow-[0_12px_40px_rgba(197,108,122,0.10)] hover:-translate-y-1">
+          <div class="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-[#C56C7A] to-[#701D2A]" aria-hidden="true"></div>
+          <div class="p-7 space-y-5">
+            <div class="w-12 h-12 rounded-2xl bg-gradient-to-br from-[#C56C7A] to-[#8C2A3B] flex items-center justify-center group-hover:scale-110 group-hover:shadow-[0_4px_16px_rgba(197,108,122,0.40)] transition-all duration-300">
+              <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" stroke-width="1.75" viewBox="0 0 24 24" aria-hidden="true">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z"/>
+              </svg>
+            </div>
+            <h3 class="font-montserrat text-xl font-black text-gray-900 dark:text-white">Terapias Complementarias</h3>
+            <p class="font-quicksand text-gray-600 dark:text-gray-400 leading-relaxed text-sm">
+              Enfoques integrales que combinan diferentes técnicas para potenciar tu salud física y emocional.
+            </p>
+            <ul class="space-y-2">
+              {['Técnicas de relajación', 'Ejercicios de respiración', 'Bienestar integral'].map(item => (
+                <li class="flex items-center gap-2 font-quicksand text-sm text-gray-600 dark:text-gray-400">
+                  <svg class="w-4 h-4 text-[#C56C7A] shrink-0" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24" aria-hidden="true">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/>
+                  </svg>
+                  {item}
+                </li>
+              ))}
+            </ul>
+            <a
+              href="https://wa.me/5491168271296?text=Hola,%20me%20interesa%20el%20servicio%20de%20Terapias%20Complementarias"
+              target="_blank"
+              rel="noopener noreferrer"
+              class="btn-shimmer group/btn inline-flex items-center justify-center w-full gap-2 px-5 py-3 bg-gradient-to-r from-[#C56C7A] to-[#8C2A3B] text-white font-montserrat font-bold text-sm rounded-xl hover:shadow-[0_4px_20px_rgba(197,108,122,0.45)] hover:scale-[1.02] transition-all duration-300"
+            >
+              Conocer Más
+              <svg class="w-4 h-4 transition-transform duration-300 group-hover/btn:translate-x-1" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24" aria-hidden="true">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M17 8l4 4m0 0l-4 4m4-4H3"/>
+              </svg>
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================
+       FAQs
+       ============================================================ -->
+  <section class="py-24 bg-gray-50 dark:bg-[#130308]">
+    <div class="max-w-3xl mx-auto px-6 lg:px-8">
+      <div class="text-center mb-14">
+        <div class="inline-flex items-center gap-2 bg-[#FF6B35]/10 border border-[#FF6B35]/20 px-4 py-1.5 rounded-full mb-5">
+          <span class="w-1.5 h-1.5 rounded-full bg-[#FF6B35]" aria-hidden="true"></span>
+          <span class="font-montserrat text-xs font-bold text-[#C83B08] dark:text-[#FF6B35] uppercase tracking-widest">Dudas frecuentes</span>
+        </div>
+        <h2 class="font-montserrat text-4xl lg:text-5xl font-black text-gray-900 dark:text-white leading-tight">
+          Preguntas <span class="bg-gradient-to-r from-[#FF6B35] to-[#C83B08] bg-clip-text text-transparent">Frecuentes</span>
+        </h2>
+      </div>
+
+      <div class="space-y-3">
+        {[
+          { q: '¿Necesito experiencia previa para entrenar?', a: 'No, no necesitás experiencia previa. Nuestros entrenamientos están diseñados para adaptarse a todos los niveles. Realizamos una evaluación inicial para conocer tu condición física y crear un plan acorde a tus capacidades.' },
+          { q: '¿Cuántas sesiones por semana recomiendan?', a: 'Depende de tus objetivos y disponibilidad. Generalmente recomendamos entre 2 y 4 sesiones por semana para obtener resultados óptimos. Durante la evaluación inicial, crearemos un plan adaptado a tu rutina.' },
+          { q: '¿Puedo entrenar si tengo una lesión o condición médica?', a: 'Sí, contamos con programas especializados en rehabilitación y adaptamos los entrenamientos a condiciones específicas. Es importante que compartas tu historial médico durante la evaluación inicial.' },
+          { q: '¿Qué debo llevar a mi primera sesión?', a: 'Ropa cómoda, zapatillas deportivas, una toalla y agua. Si tenés algún certificado médico reciente o información sobre tu historial de salud, también será útil.' },
+          { q: '¿Ofrecen planes flexibles de entrenamiento?', a: 'Sí, ofrecemos diferentes opciones de abonos y paquetes adaptados a tus necesidades. Tenemos planes mensuales, por sesiones y combos que incluyen entrenamiento + masajes.' },
+          { q: '¿Dónde se realizan los entrenamientos?', a: 'Nuestro espacio está en el barrio de Almagro, Buenos Aires. También ofrecemos entrenamientos al aire libre en espacios cercanos según disponibilidad.' },
+        ].map(faq => (
+          <details class="group bg-white dark:bg-[#1a0509] rounded-xl overflow-hidden border border-gray-100 dark:border-white/5 hover:border-[#FF6B35]/20 transition-all duration-300">
+            <summary class="flex justify-between items-center cursor-pointer p-5 font-montserrat font-bold text-base text-gray-900 dark:text-white hover:text-[#FF6B35] dark:hover:text-[#FF6B35] transition-colors duration-300 list-none select-none gap-4">
+              <span>{faq.q}</span>
+              <svg class="w-5 h-5 text-[#FF6B35] shrink-0 transform group-open:rotate-180 transition-transform duration-300" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24" aria-hidden="true">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"/>
+              </svg>
+            </summary>
+            <div class="px-5 pb-5 pt-1 font-quicksand text-gray-600 dark:text-gray-400 leading-relaxed text-[0.95rem]">
+              {faq.a}
+            </div>
+          </details>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================
+       FINAL CTA
+       ============================================================ -->
+  <section class="py-24 bg-white dark:bg-[#0f0508]">
+    <div class="max-w-4xl mx-auto px-6 text-center">
+      <div class="relative overflow-hidden rounded-3xl">
+        <div class="absolute inset-0 bg-gradient-to-br from-[#701D2A] via-[#8C2A3B] to-[#3A0C13]" aria-hidden="true"></div>
+        <div class="absolute -top-16 -right-16 w-64 h-64 rounded-full bg-[#FF6B35]/15 blur-[60px] pointer-events-none" aria-hidden="true"></div>
+        <div class="absolute inset-0 opacity-[0.04]" style="background-image: radial-gradient(circle, #fff 1px, transparent 1px); background-size: 24px 24px;" aria-hidden="true"></div>
+
+        <div class="relative z-10 px-8 py-14 space-y-6">
+          <h2 class="font-montserrat text-3xl lg:text-4xl font-black text-white">
+            ¿Listo para dar el primer paso?
+          </h2>
+          <p class="font-quicksand text-xl text-white/80 max-w-xl mx-auto">
+            Agendá tu clase de prueba gratuita y descubrí cómo podemos ayudarte a alcanzar tus objetivos.
+          </p>
+          <PrimaryButton
+            href="https://wa.me/5491168271296?text=Hola,%20me%20gustaría%20agendar%20una%20clase%20de%20prueba%20gratuita"
+            text="Reservar Clase de Prueba Gratuita"
+            icon="whatsapp"
+            variant="whatsapp"
+            size="lg"
+            target="_blank"
+            rel="noopener noreferrer"
+          />
+        </div>
+      </div>
+    </div>
+  </section>
+
+</Layout>

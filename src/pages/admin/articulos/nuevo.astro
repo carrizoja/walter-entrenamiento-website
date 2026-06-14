@@ -1,0 +1,209 @@
+---
+export const prerender = false;
+
+import AdminLayout from '../../../layouts/AdminLayout.astro';
+import { requireAuth } from '../../../lib/auth';
+import { upsertArticle } from '../../../lib/queries';
+import { uploadMedia, generateStoragePath } from '../../../lib/storage';
+
+const session = await requireAuth(Astro);
+if (session instanceof Response) return session;
+
+let error = '';
+
+if (Astro.request.method === 'POST') {
+  const form = await Astro.request.formData();
+  const title = (form.get('title') as string).trim();
+  const slug = (form.get('slug') as string).trim();
+  const excerpt = (form.get('excerpt') as string).trim();
+  const content = (form.get('content') as string).trim();
+  const category = form.get('category') as string;
+  const read_time = (form.get('read_time') as string) || '5 min';
+  const accent_from = (form.get('accent_from') as string) || '#FF6B35';
+  const accent_to = (form.get('accent_to') as string) || '#C83B08';
+  const featured = form.get('featured') === 'on';
+  const published = form.get('published') === 'on';
+  const coverFile = form.get('cover') as File | null;
+
+  let cover_url: string | null = null;
+
+  if (coverFile && coverFile.size > 0) {
+    const path = generateStoragePath(coverFile.name);
+    cover_url = await uploadMedia('article-covers', coverFile, path);
+  }
+
+  try {
+    await upsertArticle({
+      title, slug, excerpt, content, category,
+      read_time, accent_from, accent_to,
+      featured, published,
+      cover_url,
+    });
+    return Astro.redirect('/admin/articulos');
+  } catch (e: any) {
+    error = e.message?.includes('duplicate') ? 'Ya existe un artículo con ese slug. Cambialo.' : 'Error al guardar el artículo.';
+  }
+}
+
+const CATEGORIES = ['Entrenamiento', 'Consejos', 'Motivación', 'Nutrición', 'Recuperación', 'Salud Mental'];
+const COLOR_PAIRS = [
+  { from: '#FF6B35', to: '#C83B08', label: 'Naranja (principal)' },
+  { from: '#701D2A', to: '#C83B08', label: 'Rojo oscuro' },
+  { from: '#3A86FF', to: '#1E40AF', label: 'Azul' },
+  { from: '#10b981', to: '#065f46', label: 'Verde' },
+  { from: '#8B5CF6', to: '#4C1D95', label: 'Violeta' },
+];
+---
+
+<AdminLayout title="Nuevo artículo" activePage="articulos">
+  <div style="max-width: 800px;">
+    <div style="display: flex; align-items: center; gap: 1rem; margin-bottom: 1.5rem;">
+      <a href="/admin/articulos" style="color: #9ca3af; text-decoration: none; font-size: 0.875rem;">← Volver</a>
+      <h1 style="font-family: 'Montserrat', sans-serif; font-size: 1.5rem; font-weight: 700; color: #f9fafb;">Nuevo artículo</h1>
+    </div>
+
+    {error && (
+      <div style="background: #450a0a; border: 1px solid #dc2626; border-radius: 0.5rem; padding: 0.75rem 1rem; margin-bottom: 1.5rem; color: #fca5a5; font-size: 0.875rem;">
+        {error}
+      </div>
+    )}
+
+    <form method="POST" enctype="multipart/form-data" style="display: flex; flex-direction: column; gap: 1.25rem;">
+
+      <!-- Title -->
+      <div style="background: #1f2937; border: 1px solid #374151; border-radius: 0.75rem; padding: 1.5rem; display: flex; flex-direction: column; gap: 1.25rem;">
+        <h2 style="font-family: 'Montserrat', sans-serif; font-size: 0.875rem; font-weight: 600; color: #9ca3af; text-transform: uppercase; letter-spacing: 0.05em;">Información básica</h2>
+
+        <div>
+          <label style="display: block; font-size: 0.8rem; font-weight: 600; color: #d1d5db; margin-bottom: 0.5rem;">TÍTULO *</label>
+          <input type="text" name="title" required id="title-input"
+            style="width: 100%; padding: 0.75rem 1rem; background: #374151; border: 1px solid #4b5563; border-radius: 0.5rem; color: #f9fafb; font-family: 'Quicksand', sans-serif; font-size: 0.9rem;" />
+        </div>
+
+        <div>
+          <label style="display: block; font-size: 0.8rem; font-weight: 600; color: #d1d5db; margin-bottom: 0.5rem;">SLUG (URL) *</label>
+          <input type="text" name="slug" required id="slug-input"
+            placeholder="beneficios-del-entrenamiento"
+            style="width: 100%; padding: 0.75rem 1rem; background: #374151; border: 1px solid #4b5563; border-radius: 0.5rem; color: #f9fafb; font-family: 'Quicksand', sans-serif; font-size: 0.9rem;" />
+          <p style="color: #6b7280; font-size: 0.75rem; margin-top: 0.375rem;">Se genera automáticamente desde el título. No uses espacios ni caracteres especiales.</p>
+        </div>
+
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+          <div>
+            <label style="display: block; font-size: 0.8rem; font-weight: 600; color: #d1d5db; margin-bottom: 0.5rem;">CATEGORÍA *</label>
+            <select name="category" required
+              style="width: 100%; padding: 0.75rem 1rem; background: #374151; border: 1px solid #4b5563; border-radius: 0.5rem; color: #f9fafb; font-family: 'Quicksand', sans-serif; font-size: 0.9rem;">
+              {CATEGORIES.map(cat => <option value={cat}>{cat}</option>)}
+            </select>
+          </div>
+          <div>
+            <label style="display: block; font-size: 0.8rem; font-weight: 600; color: #d1d5db; margin-bottom: 0.5rem;">TIEMPO DE LECTURA</label>
+            <input type="text" name="read_time" placeholder="5 min"
+              style="width: 100%; padding: 0.75rem 1rem; background: #374151; border: 1px solid #4b5563; border-radius: 0.5rem; color: #f9fafb; font-family: 'Quicksand', sans-serif; font-size: 0.9rem;" />
+          </div>
+        </div>
+
+        <div>
+          <label style="display: block; font-size: 0.8rem; font-weight: 600; color: #d1d5db; margin-bottom: 0.5rem;">RESUMEN *</label>
+          <textarea name="excerpt" required rows="3"
+            style="width: 100%; padding: 0.75rem 1rem; background: #374151; border: 1px solid #4b5563; border-radius: 0.5rem; color: #f9fafb; font-family: 'Quicksand', sans-serif; font-size: 0.9rem; resize: vertical;"></textarea>
+          <p style="color: #6b7280; font-size: 0.75rem; margin-top: 0.375rem;">Texto breve que aparece en la lista de artículos (2-3 oraciones).</p>
+        </div>
+      </div>
+
+      <!-- Content -->
+      <div style="background: #1f2937; border: 1px solid #374151; border-radius: 0.75rem; padding: 1.5rem;">
+        <h2 style="font-family: 'Montserrat', sans-serif; font-size: 0.875rem; font-weight: 600; color: #9ca3af; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 1rem;">Contenido completo</h2>
+        <textarea name="content" required rows="18"
+          placeholder="Escribí el artículo acá. Podés usar HTML para dar formato: <h2>Subtítulo</h2>, <p>Párrafo</p>, <strong>negrita</strong>, <ul><li>ítem</li></ul>"
+          style="width: 100%; padding: 0.75rem 1rem; background: #374151; border: 1px solid #4b5563; border-radius: 0.5rem; color: #f9fafb; font-family: 'Quicksand', sans-serif; font-size: 0.875rem; resize: vertical;"></textarea>
+      </div>
+
+      <!-- Cover + colors -->
+      <div style="background: #1f2937; border: 1px solid #374151; border-radius: 0.75rem; padding: 1.5rem; display: flex; flex-direction: column; gap: 1.25rem;">
+        <h2 style="font-family: 'Montserrat', sans-serif; font-size: 0.875rem; font-weight: 600; color: #9ca3af; text-transform: uppercase; letter-spacing: 0.05em;">Imagen y color</h2>
+
+        <div>
+          <label style="display: block; font-size: 0.8rem; font-weight: 600; color: #d1d5db; margin-bottom: 0.5rem;">IMAGEN DE PORTADA (opcional)</label>
+          <input type="file" name="cover" accept="image/jpeg,image/png,image/webp"
+            style="width: 100%; padding: 0.75rem; background: #374151; border: 1px solid #4b5563; border-radius: 0.5rem; color: #9ca3af; font-size: 0.875rem;" />
+        </div>
+
+        <div>
+          <label style="display: block; font-size: 0.8rem; font-weight: 600; color: #d1d5db; margin-bottom: 0.75rem;">COLOR DE LA TARJETA</label>
+          <div style="display: flex; flex-wrap: wrap; gap: 0.75rem;" id="color-picker">
+            {COLOR_PAIRS.map((pair, i) => (
+              <label style="display: flex; align-items: center; gap: 0.5rem; cursor: pointer;">
+                <input type="radio" name="_color_pair" value={i} style="display: none;" checked={i === 0} />
+                <input type="hidden" name="accent_from" value={pair.from} />
+                <input type="hidden" name="accent_to" value={pair.to} />
+                <div style={`width: 32px; height: 32px; border-radius: 50%; background: linear-gradient(135deg, ${pair.from}, ${pair.to}); border: 2px solid ${i === 0 ? 'white' : 'transparent'};`}></div>
+                <span style="font-size: 0.8rem; color: #d1d5db;">{pair.label}</span>
+              </label>
+            ))}
+          </div>
+        </div>
+      </div>
+
+      <!-- Flags -->
+      <div style="background: #1f2937; border: 1px solid #374151; border-radius: 0.75rem; padding: 1.5rem; display: flex; gap: 2rem; flex-wrap: wrap;">
+        <label style="display: flex; align-items: center; gap: 0.75rem; cursor: pointer;">
+          <input type="checkbox" name="featured" style="width: 18px; height: 18px; accent-color: #FF6B35;" />
+          <div>
+            <div style="font-family: 'Montserrat', sans-serif; font-weight: 600; font-size: 0.875rem; color: #f9fafb;">Artículo destacado</div>
+            <div style="color: #6b7280; font-size: 0.775rem;">Aparece primero en la página de Bienestar</div>
+          </div>
+        </label>
+        <label style="display: flex; align-items: center; gap: 0.75rem; cursor: pointer;">
+          <input type="checkbox" name="published" style="width: 18px; height: 18px; accent-color: #34d399;" />
+          <div>
+            <div style="font-family: 'Montserrat', sans-serif; font-weight: 600; font-size: 0.875rem; color: #f9fafb;">Publicar ahora</div>
+            <div style="color: #6b7280; font-size: 0.775rem;">Si no está marcado, se guarda como borrador</div>
+          </div>
+        </label>
+      </div>
+
+      <!-- Submit -->
+      <div style="display: flex; gap: 1rem; justify-content: flex-end;">
+        <a href="/admin/articulos" style="padding: 0.75rem 1.5rem; background: #374151; color: #d1d5db; border-radius: 0.5rem; font-family: 'Montserrat', sans-serif; font-weight: 600; font-size: 0.875rem; text-decoration: none;">
+          Cancelar
+        </a>
+        <button type="submit"
+          style="padding: 0.75rem 1.5rem; background: linear-gradient(135deg, #FF6B35, #C83B08); color: white; border: none; border-radius: 0.5rem; font-family: 'Montserrat', sans-serif; font-weight: 600; font-size: 0.875rem; cursor: pointer;">
+          Guardar artículo
+        </button>
+      </div>
+    </form>
+  </div>
+</AdminLayout>
+
+<script>
+// Auto-generate slug from title
+const titleInput = document.getElementById('title-input') as HTMLInputElement;
+const slugInput = document.getElementById('slug-input') as HTMLInputElement;
+
+function toSlug(str: string) {
+  return str.toLowerCase()
+    .normalize('NFD').replace(/[\u0300-\u036f]/g, '')
+    .replace(/[^a-z0-9\s-]/g, '')
+    .trim().replace(/\s+/g, '-');
+}
+
+let slugTouched = false;
+slugInput?.addEventListener('input', () => { slugTouched = true; });
+titleInput?.addEventListener('input', () => {
+  if (!slugTouched) slugInput.value = toSlug(titleInput.value);
+});
+
+// Color picker: update hidden inputs on selection
+document.querySelectorAll('#color-picker label').forEach((label, i) => {
+  const radio = label.querySelector('input[type="radio"]') as HTMLInputElement;
+  const dot = label.querySelector('div') as HTMLElement;
+  radio?.addEventListener('change', () => {
+    document.querySelectorAll('#color-picker div[style]').forEach((d: any) => {
+      d.style.borderColor = 'transparent';
+    });
+    if (radio.checked) dot.style.borderColor = 'white';
+  });
+});
+</script>

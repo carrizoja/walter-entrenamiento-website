@@ -1,0 +1,60 @@
+---
+// Contact.astro — Compact CTA strip (Home page)
+// Full contact details live at /contacto
+import PrimaryButton from './ux/PrimaryButton.astro';
+---
+
+<section
+  id="contacto"
+  class="relative py-16 lg:py-20 bg-gradient-to-br from-[#701D2A] via-[#8C2A3B] to-[#3A0C13] overflow-hidden"
+  aria-label="Sección de contacto"
+>
+  <!-- Decorative blobs -->
+  <div class="absolute inset-0 pointer-events-none" aria-hidden="true">
+    <div class="absolute -top-24 right-0 w-[500px] h-[400px] rounded-full bg-[#FF6B35]/15 blur-[80px]"></div>
+    <div class="absolute bottom-0 -left-24 w-[350px] h-[300px] rounded-full bg-[#C83B08]/10 blur-[80px]"></div>
+  </div>
+
+  <!-- Dot grid texture -->
+  <div
+    class="absolute inset-0 opacity-[0.04]"
+    style="background-image: radial-gradient(circle, #fff 1px, transparent 1px); background-size: 28px 28px;"
+    aria-hidden="true"
+  ></div>
+
+  <div class="relative z-10 max-w-7xl mx-auto px-6 lg:px-8">
+    <div class="flex flex-col lg:flex-row items-center justify-between gap-8 lg:gap-16">
+
+      <!-- Left: headline + subtext -->
+      <div class="text-center lg:text-left space-y-3">
+        <h2 class="font-montserrat text-3xl lg:text-4xl font-black text-white leading-tight">
+          ¿Listo para <span class="text-[#FF6B35]">entrenar?</span>
+        </h2>
+        <p class="font-quicksand text-white/75 text-base lg:text-lg max-w-md">
+          Agendá tu clase de prueba gratuita — sin compromiso, sin costo.
+        </p>
+      </div>
+
+      <!-- Right: CTAs -->
+      <div class="flex flex-col sm:flex-row gap-4 shrink-0">
+        <PrimaryButton
+          href="https://wa.me/5491168271296?text=Hola,%20me%20gustaría%20agendar%20una%20clase%20de%20prueba%20gratuita"
+          text="Clase Gratis por WhatsApp"
+          icon="whatsapp"
+          variant="whatsapp"
+          size="lg"
+          target="_blank"
+          rel="noopener noreferrer"
+        />
+        <PrimaryButton
+          href="/contacto"
+          text="Ver todos los canales"
+          variant="secondary"
+          size="lg"
+          class="border-white/70 text-white hover:bg-white hover:text-[#701D2A] hover:border-white dark:border-white/70 dark:text-white dark:hover:bg-white dark:hover:text-[#701D2A]"
+        />
+      </div>
+
+    </div>
+  </div>
+</section>

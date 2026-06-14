@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 1200" role="img" aria-labelledby="title desc">
+  <title id="title">Sesion de fuerza personalizada</title>
+  <desc id="desc">Imagen generada para la galeria de Walter Entrenamiento.</desc>
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#701D2A"/>
+      <stop offset="100%" stop-color="#FF6B35"/>
+    </linearGradient>
+  </defs>
+  <rect width="1600" height="1200" fill="url(#bg)"/>
+  <circle cx="1280" cy="260" r="220" fill="rgba(255,255,255,0.08)"/>
+  <circle cx="280" cy="980" r="260" fill="rgba(255,255,255,0.06)"/>
+  <text x="120" y="470" fill="#ffffff" font-family="Montserrat, Arial, sans-serif" font-size="74" font-weight="700">Sesion de fuerza</text>
+  <text x="120" y="560" fill="#ffffff" font-family="Montserrat, Arial, sans-serif" font-size="74" font-weight="700">personalizada</text>
+  <text x="120" y="660" fill="rgba(255,255,255,0.86)" font-family="Quicksand, Arial, sans-serif" font-size="36">Trabajo tecnico, progresivo y adaptado a cada objetivo.</text>
+</svg>

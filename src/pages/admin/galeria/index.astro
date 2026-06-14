@@ -1,0 +1,167 @@
+---
+export const prerender = false;
+
+import AdminLayout from '../../../layouts/AdminLayout.astro';
+import { requireAuth } from '../../../lib/auth';
+import { getGalleryItems, deleteGalleryItem, swapGalleryOrder } from '../../../lib/queries';
+import { deleteMedia } from '../../../lib/storage';
+
+const user = await requireAuth(Astro);
+if (user instanceof Response) return user;
+
+if (Astro.request.method === 'POST') {
+  const form = await Astro.request.formData();
+  const action = form.get('_action') as string;
+  const id = form.get('id') as string;
+
+  if (action === 'delete') {
+    const storagePath = form.get('storage_path') as string;
+    const bucket = form.get('bucket') as string || 'gallery';
+
+    await deleteMedia(bucket, storagePath).catch(() => {});
+    // Also delete thumbnail if exists
+    const thumbPath = form.get('thumbnail_path') as string;
+    if (thumbPath) await deleteMedia('gallery', thumbPath).catch(() => {});
+
+    await deleteGalleryItem(id);
+  } else if (action === 'move-up' || action === 'move-down') {
+    const currentOrder = parseInt(form.get('sort_order') as string);
+    const otherId = form.get('other_id') as string;
+    const otherOrder = parseInt(form.get('other_sort_order') as string);
+    if (otherId && Number.isFinite(currentOrder) && Number.isFinite(otherOrder)) {
+      await swapGalleryOrder(
+        { id, sort_order: currentOrder },
+        { id: otherId, sort_order: otherOrder }
+      );
+    }
+  }
+
+  return Astro.redirect('/admin/galeria');
+}
+
+const items = await getGalleryItems();
+---
+
+<AdminLayout title="Galería" activePage="galeria">
+  <div>
+    <!-- Header -->
+    <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 1.5rem; flex-wrap: wrap; gap: 1rem;">
+      <div>
+        <h1 style="font-family: 'Montserrat', sans-serif; font-size: 1.5rem; font-weight: 700; color: #f9fafb;">Galería</h1>
+        <p style="color: #9ca3af; font-size: 0.875rem; margin-top: 0.25rem;">{items.length} item{items.length !== 1 ? 's' : ''} en total</p>
+      </div>
+      <a
+        href="/admin/galeria/nuevo"
+        style="display: inline-flex; align-items: center; gap: 0.5rem; padding: 0.625rem 1.25rem; background: linear-gradient(135deg, #a78bfa, #7c3aed); color: white; border-radius: 0.5rem; font-family: 'Montserrat', sans-serif; font-weight: 600; font-size: 0.875rem; text-decoration: none;"
+      >
+        <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+          <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+          <polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/>
+        </svg>
+        Subir foto/video
+      </a>
+    </div>
+
+    {items.length === 0 ? (
+      <div style="background: #1f2937; border: 1px solid #374151; border-radius: 0.75rem; padding: 3rem; text-align: center;">
+        <p style="color: #9ca3af;">La galería está vacía. <a href="/admin/galeria/nuevo" style="color: #a78bfa;">Subí el primer item.</a></p>
+      </div>
+    ) : (
+      <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 1rem;">
+        {items.map((item, idx) => {
+          const prev = idx > 0 ? items[idx - 1] : null;
+          const next = idx < items.length - 1 ? items[idx + 1] : null;
+          return (
+          <div style="background: #1f2937; border: 1px solid #374151; border-radius: 0.75rem; overflow: hidden;">
+            <!-- Thumbnail -->
+            <div style="aspect-ratio: 4/3; background: #374151; position: relative; overflow: hidden;">
+              {item.media_type === 'photo' ? (
+                <img src={item.public_url} alt={item.title}
+                  style="width: 100%; height: 100%; object-fit: cover;" />
+              ) : (
+                <div style="width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; background: #1e1b4b;">
+                  {item.thumbnail_url ? (
+                    <img src={item.thumbnail_url} alt={item.title}
+                      style="width: 100%; height: 100%; object-fit: cover; opacity: 0.7;" />
+                  ) : (
+                    <svg width="40" height="40" fill="none" stroke="#a78bfa" stroke-width="1.5" viewBox="0 0 24 24">
+                      <polygon points="5 3 19 12 5 21 5 3"/>
+                    </svg>
+                  )}
+                  <div style="position: absolute; top: 0.5rem; right: 0.5rem; background: rgba(0,0,0,0.7); color: #a78bfa; border-radius: 0.25rem; padding: 0.1rem 0.4rem; font-size: 0.7rem; font-family: 'Montserrat', sans-serif; font-weight: 600;">
+                    VIDEO
+                  </div>
+                </div>
+              )}
+              {item.featured && (
+                <div style="position: absolute; top: 0.5rem; left: 0.5rem; background: #FF6B35; color: white; border-radius: 0.25rem; padding: 0.1rem 0.35rem; font-size: 0.65rem; font-family: 'Montserrat', sans-serif; font-weight: 700;">
+                  ★ DESTACADO
+                </div>
+              )}
+            </div>
+            <!-- Info + actions -->
+            <div style="padding: 0.875rem;">
+              <p style="font-weight: 600; font-size: 0.85rem; color: #f9fafb; margin-bottom: 0.25rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;" title={item.title}>{item.title}</p>
+              <p style="font-size: 0.75rem; color: #9ca3af; margin-bottom: 0.75rem;">
+                {item.category} · orden {item.sort_order}
+              </p>
+              <div style="display: flex; gap: 0.375rem; margin-bottom: 0.5rem;">
+                <form method="POST" style="flex: 1;">
+                  <input type="hidden" name="_action" value="move-up" />
+                  <input type="hidden" name="id" value={item.id} />
+                  <input type="hidden" name="sort_order" value={item.sort_order} />
+                  {prev && (
+                    <>
+                      <input type="hidden" name="other_id" value={prev.id} />
+                      <input type="hidden" name="other_sort_order" value={prev.sort_order} />
+                    </>
+                  )}
+                  <button type="submit" disabled={!prev}
+                    aria-label="Mover hacia arriba"
+                    style={`width: 100%; padding: 0.375rem 0.5rem; background: #374151; color: ${prev ? '#d1d5db' : '#4b5563'}; border: none; border-radius: 0.375rem; font-size: 0.85rem; cursor: ${prev ? 'pointer' : 'not-allowed'}; font-family: 'Montserrat', sans-serif; font-weight: 500;`}>
+                    ↑
+                  </button>
+                </form>
+                <form method="POST" style="flex: 1;">
+                  <input type="hidden" name="_action" value="move-down" />
+                  <input type="hidden" name="id" value={item.id} />
+                  <input type="hidden" name="sort_order" value={item.sort_order} />
+                  {next && (
+                    <>
+                      <input type="hidden" name="other_id" value={next.id} />
+                      <input type="hidden" name="other_sort_order" value={next.sort_order} />
+                    </>
+                  )}
+                  <button type="submit" disabled={!next}
+                    aria-label="Mover hacia abajo"
+                    style={`width: 100%; padding: 0.375rem 0.5rem; background: #374151; color: ${next ? '#d1d5db' : '#4b5563'}; border: none; border-radius: 0.375rem; font-size: 0.85rem; cursor: ${next ? 'pointer' : 'not-allowed'}; font-family: 'Montserrat', sans-serif; font-weight: 500;`}>
+                    ↓
+                  </button>
+                </form>
+              </div>
+              <div style="display: flex; gap: 0.5rem;">
+                <a href={`/admin/galeria/${item.id}`}
+                  style="flex: 1; padding: 0.375rem 0.5rem; background: #374151; color: #d1d5db; border-radius: 0.375rem; font-size: 0.775rem; text-decoration: none; font-family: 'Montserrat', sans-serif; font-weight: 500; text-align: center;">
+                  Editar
+                </a>
+                <form method="POST" onsubmit="return confirm('¿Eliminar este item de la galería?')" style="flex: 1;">
+                  <input type="hidden" name="_action" value="delete" />
+                  <input type="hidden" name="id" value={item.id} />
+                  <input type="hidden" name="storage_path" value={item.storage_path} />
+                  {item.thumbnail_url && (
+                    <input type="hidden" name="thumbnail_path" value={item.thumbnail_url.split('/gallery/').pop() ?? ''} />
+                  )}
+                  <button type="submit"
+                    style="width: 100%; padding: 0.375rem 0.5rem; background: #450a0a; color: #fca5a5; border: none; border-radius: 0.375rem; font-size: 0.775rem; cursor: pointer; font-family: 'Montserrat', sans-serif; font-weight: 500;">
+                    Eliminar
+                  </button>
+                </form>
+              </div>
+            </div>
+          </div>
+          );
+        })}
+      </div>
+    )}
+  </div>
+</AdminLayout>

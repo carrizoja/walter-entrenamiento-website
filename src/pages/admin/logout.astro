@@ -1,0 +1,7 @@
+---
+export const prerender = false;
+
+// Delete the session cookie to log the user out
+Astro.cookies.delete('session', { path: '/' });
+return Astro.redirect('/admin/login');
+---

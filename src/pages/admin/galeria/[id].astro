@@ -1,0 +1,206 @@
+---
+export const prerender = false;
+
+import AdminLayout from '../../../layouts/AdminLayout.astro';
+import { requireAuth } from '../../../lib/auth';
+import { getGalleryItemById, upsertGalleryItem, deleteGalleryItem } from '../../../lib/queries';
+import { uploadMedia, generateStoragePath, deleteMedia } from '../../../lib/storage';
+
+const session = await requireAuth(Astro);
+if (session instanceof Response) return session;
+
+const { id } = Astro.params;
+const item = await getGalleryItemById(id!);
+if (!item) return Astro.redirect('/admin/galeria');
+
+let error = '';
+
+if (Astro.request.method === 'POST') {
+  const form = await Astro.request.formData();
+  const action = form.get('_action') as string;
+
+  if (action === 'delete') {
+    await deleteMedia('gallery', item.storage_path).catch(() => {});
+    if (item.thumbnail_url) {
+      const thumbPath = item.thumbnail_url.split('/gallery/').pop();
+      if (thumbPath) await deleteMedia('gallery', thumbPath).catch(() => {});
+    }
+    await deleteGalleryItem(id!);
+    return Astro.redirect('/admin/galeria');
+  }
+
+  // Update metadata
+  const title = (form.get('title') as string).trim();
+  const description = (form.get('description') as string).trim();
+  const category = form.get('category') as string;
+  const featured = form.get('featured') === 'on';
+  const sort_order = parseInt(form.get('sort_order') as string) || 0;
+  const duration = (form.get('duration') as string)?.trim() || null;
+
+  let storage_path = item.storage_path;
+  let public_url = item.public_url;
+  let thumbnail_url = item.thumbnail_url;
+
+  // Replace media file if provided
+  const newFile = form.get('new_media_file') as File | null;
+  if (newFile && newFile.size > 0) {
+    await deleteMedia('gallery', item.storage_path).catch(() => {});
+    storage_path = generateStoragePath(newFile.name);
+    public_url = await uploadMedia('gallery', newFile, storage_path);
+  }
+
+  // Replace thumbnail if provided
+  const newThumb = form.get('new_thumbnail') as File | null;
+  if (newThumb && newThumb.size > 0) {
+    const thumbPath = `thumbs/${generateStoragePath(newThumb.name)}`;
+    thumbnail_url = await uploadMedia('gallery', newThumb, thumbPath);
+  }
+
+  try {
+    await upsertGalleryItem({
+      id: id!,
+      title, description, category, featured, sort_order, duration,
+      storage_path, public_url, thumbnail_url,
+      media_type: item.media_type,
+    });
+    return Astro.redirect('/admin/galeria');
+  } catch (e: any) {
+    error = 'Error al guardar: ' + (e.message ?? 'Intentá de nuevo.');
+  }
+}
+
+const GALLERY_CATEGORIES = ['Entrenamientos', 'Grupales', 'Ejercicios', 'Masajes', 'Recuperación', 'Instalaciones'];
+---
+
+<AdminLayout title="Editar item" activePage="galeria">
+  <div style="max-width: 700px;">
+    <div style="display: flex; align-items: center; gap: 1rem; margin-bottom: 1.5rem; flex-wrap: wrap;">
+      <a href="/admin/galeria" style="color: #9ca3af; text-decoration: none; font-size: 0.875rem;">← Volver</a>
+      <h1 style="font-family: 'Montserrat', sans-serif; font-size: 1.5rem; font-weight: 700; color: #f9fafb;">Editar item de galería</h1>
+      <form method="POST" onsubmit="return confirm('¿Eliminar este item de la galería?')" style="margin-left: auto;">
+        <input type="hidden" name="_action" value="delete" />
+        <button type="submit" style="padding: 0.5rem 1rem; background: #450a0a; color: #fca5a5; border: 1px solid #dc2626; border-radius: 0.5rem; font-family: 'Montserrat', sans-serif; font-weight: 600; font-size: 0.8rem; cursor: pointer;">
+          Eliminar
+        </button>
+      </form>
+    </div>
+
+    {error && (
+      <div style="background: #450a0a; border: 1px solid #dc2626; border-radius: 0.5rem; padding: 0.75rem 1rem; margin-bottom: 1.5rem; color: #fca5a5; font-size: 0.875rem;">
+        {error}
+      </div>
+    )}
+
+    <!-- Preview -->
+    <div style="background: #1f2937; border: 1px solid #374151; border-radius: 0.75rem; padding: 1.5rem; margin-bottom: 1.25rem;">
+      <h2 style="font-family: 'Montserrat', sans-serif; font-size: 0.875rem; font-weight: 600; color: #9ca3af; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 1rem;">Vista previa actual</h2>
+      <div style="display: flex; gap: 1rem; align-items: flex-start; flex-wrap: wrap;">
+        <div style="width: 140px; height: 100px; border-radius: 0.5rem; overflow: hidden; flex-shrink: 0; background: #374151;">
+          {item.media_type === 'photo' ? (
+            <img src={item.public_url} alt={item.title} style="width: 100%; height: 100%; object-fit: cover;" />
+          ) : (
+            <div style="width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; background: #1e1b4b;">
+              {item.thumbnail_url ? (
+                <img src={item.thumbnail_url} alt="" style="width: 100%; height: 100%; object-fit: cover; opacity: 0.7;" />
+              ) : (
+                <svg width="32" height="32" fill="none" stroke="#a78bfa" stroke-width="1.5" viewBox="0 0 24 24">
+                  <polygon points="5 3 19 12 5 21 5 3"/>
+                </svg>
+              )}
+            </div>
+          )}
+        </div>
+        <div>
+          <p style="font-weight: 600; color: #f9fafb; margin-bottom: 0.25rem;">{item.title}</p>
+          <p style="font-size: 0.8rem; color: #9ca3af;">{item.category} · {item.media_type === 'photo' ? 'Foto' : 'Video'}</p>
+        </div>
+      </div>
+    </div>
+
+    <form method="POST" enctype="multipart/form-data" style="display: flex; flex-direction: column; gap: 1.25rem;">
+      <input type="hidden" name="_action" value="update" />
+
+      <!-- Metadata -->
+      <div style="background: #1f2937; border: 1px solid #374151; border-radius: 0.75rem; padding: 1.5rem; display: flex; flex-direction: column; gap: 1.25rem;">
+        <h2 style="font-family: 'Montserrat', sans-serif; font-size: 0.875rem; font-weight: 600; color: #9ca3af; text-transform: uppercase; letter-spacing: 0.05em;">Información</h2>
+
+        <div>
+          <label style="display: block; font-size: 0.8rem; font-weight: 600; color: #d1d5db; margin-bottom: 0.5rem;">TÍTULO *</label>
+          <input type="text" name="title" required value={item.title}
+            style="width: 100%; padding: 0.75rem 1rem; background: #374151; border: 1px solid #4b5563; border-radius: 0.5rem; color: #f9fafb; font-family: 'Quicksand', sans-serif; font-size: 0.9rem;" />
+        </div>
+
+        <div>
+          <label style="display: block; font-size: 0.8rem; font-weight: 600; color: #d1d5db; margin-bottom: 0.5rem;">DESCRIPCIÓN</label>
+          <textarea name="description" rows="2"
+            style="width: 100%; padding: 0.75rem 1rem; background: #374151; border: 1px solid #4b5563; border-radius: 0.5rem; color: #f9fafb; font-family: 'Quicksand', sans-serif; font-size: 0.9rem; resize: vertical;">{item.description}</textarea>
+        </div>
+
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+          <div>
+            <label style="display: block; font-size: 0.8rem; font-weight: 600; color: #d1d5db; margin-bottom: 0.5rem;">CATEGORÍA *</label>
+            <select name="category" required
+              style="width: 100%; padding: 0.75rem 1rem; background: #374151; border: 1px solid #4b5563; border-radius: 0.5rem; color: #f9fafb; font-family: 'Quicksand', sans-serif; font-size: 0.9rem;">
+              {GALLERY_CATEGORIES.map(cat => <option value={cat} selected={cat === item.category}>{cat}</option>)}
+            </select>
+          </div>
+          <div>
+            <label style="display: block; font-size: 0.8rem; font-weight: 600; color: #d1d5db; margin-bottom: 0.5rem;">ORDEN</label>
+            <input type="number" name="sort_order" value={item.sort_order} min="0"
+              style="width: 100%; padding: 0.75rem 1rem; background: #374151; border: 1px solid #4b5563; border-radius: 0.5rem; color: #f9fafb; font-family: 'Quicksand', sans-serif; font-size: 0.9rem;" />
+          </div>
+        </div>
+
+        {item.media_type === 'video' && (
+          <div>
+            <label style="display: block; font-size: 0.8rem; font-weight: 600; color: #d1d5db; margin-bottom: 0.5rem;">DURACIÓN</label>
+            <input type="text" name="duration" value={item.duration ?? ''} placeholder="2:30"
+              style="width: 200px; padding: 0.75rem 1rem; background: #374151; border: 1px solid #4b5563; border-radius: 0.5rem; color: #f9fafb; font-family: 'Quicksand', sans-serif; font-size: 0.9rem;" />
+          </div>
+        )}
+      </div>
+
+      <!-- Replace media -->
+      <div style="background: #1f2937; border: 1px solid #374151; border-radius: 0.75rem; padding: 1.5rem; display: flex; flex-direction: column; gap: 1rem;">
+        <h2 style="font-family: 'Montserrat', sans-serif; font-size: 0.875rem; font-weight: 600; color: #9ca3af; text-transform: uppercase; letter-spacing: 0.05em;">Reemplazar archivo (opcional)</h2>
+        <div>
+          <label style="display: block; font-size: 0.8rem; font-weight: 600; color: #d1d5db; margin-bottom: 0.5rem;">
+            {item.media_type === 'photo' ? 'NUEVA FOTO' : 'NUEVO VIDEO'}
+          </label>
+          <input type="file" name="new_media_file"
+            accept={item.media_type === 'photo' ? 'image/jpeg,image/png,image/webp' : 'video/mp4,video/webm'}
+            style="width: 100%; padding: 0.75rem; background: #374151; border: 1px solid #4b5563; border-radius: 0.5rem; color: #9ca3af; font-size: 0.875rem;" />
+        </div>
+        {item.media_type === 'video' && (
+          <div>
+            <label style="display: block; font-size: 0.8rem; font-weight: 600; color: #d1d5db; margin-bottom: 0.5rem;">NUEVA MINIATURA</label>
+            <input type="file" name="new_thumbnail" accept="image/jpeg,image/png,image/webp"
+              style="width: 100%; padding: 0.75rem; background: #374151; border: 1px solid #4b5563; border-radius: 0.5rem; color: #9ca3af; font-size: 0.875rem;" />
+          </div>
+        )}
+      </div>
+
+      <!-- Featured -->
+      <div style="background: #1f2937; border: 1px solid #374151; border-radius: 0.75rem; padding: 1.5rem;">
+        <label style="display: flex; align-items: center; gap: 0.75rem; cursor: pointer;">
+          <input type="checkbox" name="featured" checked={item.featured} style="width: 18px; height: 18px; accent-color: #FF6B35;" />
+          <div>
+            <div style="font-family: 'Montserrat', sans-serif; font-weight: 600; font-size: 0.875rem; color: #f9fafb;">Contenido destacado</div>
+            <div style="color: #6b7280; font-size: 0.775rem;">Los videos destacados aparecen en "Video Highlights"</div>
+          </div>
+        </label>
+      </div>
+
+      <!-- Submit -->
+      <div style="display: flex; gap: 1rem; justify-content: flex-end;">
+        <a href="/admin/galeria" style="padding: 0.75rem 1.5rem; background: #374151; color: #d1d5db; border-radius: 0.5rem; font-family: 'Montserrat', sans-serif; font-weight: 600; font-size: 0.875rem; text-decoration: none;">
+          Cancelar
+        </a>
+        <button type="submit"
+          style="padding: 0.75rem 1.5rem; background: linear-gradient(135deg, #a78bfa, #7c3aed); color: white; border: none; border-radius: 0.5rem; font-family: 'Montserrat', sans-serif; font-weight: 600; font-size: 0.875rem; cursor: pointer;">
+          Guardar cambios
+        </button>
+      </div>
+    </form>
+  </div>
+</AdminLayout>

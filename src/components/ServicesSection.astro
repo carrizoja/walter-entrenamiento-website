@@ -1,0 +1,112 @@
+---
+// Services Section — Home Page
+import ServiceCard from './ServiceCard.astro';
+import PrimaryButton from './ux/PrimaryButton.astro';
+---
+
+<section id="servicios" class="relative py-28 bg-gray-50 dark:bg-[#130308] overflow-hidden">
+
+  <!-- Decorative background blobs -->
+  <div class="absolute inset-0 pointer-events-none" aria-hidden="true">
+    <div class="absolute top-0 right-0 w-[500px] h-[500px] rounded-full bg-[#FF6B35]/5 dark:bg-[#FF6B35]/8 blur-[80px]"></div>
+    <div class="absolute bottom-0 left-0 w-[400px] h-[400px] rounded-full bg-[#701D2A]/6 dark:bg-[#701D2A]/12 blur-[80px]"></div>
+  </div>
+
+  <div class="relative z-10 max-w-7xl mx-auto px-6 lg:px-8">
+
+    <!-- Section Header -->
+    <div class="text-center mb-20">
+      <!-- Eyebrow -->
+      <div class="inline-flex items-center gap-2 bg-[#FF6B35]/10 dark:bg-[#FF6B35]/15 border border-[#FF6B35]/20 px-4 py-1.5 rounded-full mb-6">
+        <span class="w-1.5 h-1.5 rounded-full bg-[#FF6B35]" aria-hidden="true"></span>
+        <span class="font-montserrat text-xs font-bold text-[#C83B08] dark:text-[#FF6B35] uppercase tracking-widest">
+          Lo que ofrezco
+        </span>
+      </div>
+
+      <h2 class="font-montserrat text-4xl lg:text-5xl xl:text-6xl font-black text-gray-900 dark:text-white leading-tight mb-5">
+        Alcanzá tu <span class="bg-gradient-to-r from-[#FF6B35] to-[#C83B08] bg-clip-text text-transparent">Mejor</span><br class="hidden sm:block" /> versión
+      </h2>
+      <p class="font-quicksand text-lg lg:text-xl text-gray-600 dark:text-gray-400 max-w-2xl mx-auto leading-relaxed">
+        Un enfoque personalizado que combina entrenamiento, terapia y acompañamiento
+        para tu transformación física y emocional.
+      </p>
+    </div>
+
+    <!-- Services Grid -->
+    <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-7">
+      <ServiceCard
+        title="Entrenamientos Personalizados"
+        description="Rutinas adaptadas a tu edad, condición física y objetivos. Entrenamiento funcional que fortalece tu cuerpo y mejora tu calidad de vida."
+        icon="personal"
+        link="/servicios#entrenamientos"
+      />
+
+      <ServiceCard
+        title="Entrenamientos Grupales"
+        description="Sesiones dinámicas en grupo que fomentan la motivación, el compañerismo y el compromiso. Ideal para quienes disfrutan de la energía colectiva."
+        icon="grupal"
+        link="/servicios#grupales"
+      />
+
+      <ServiceCard
+        title="Acompañamiento Terapéutico"
+        description="Apoyo integral que va más allá del entrenamiento físico, cuidando también tu bienestar emocional y mental."
+        icon="terapeutico"
+        link="/servicios#terapeutico"
+      />
+
+      <ServiceCard
+        title="Masajes Especializados"
+        description="Técnicas de masoterapia para aliviar tensiones, mejorar la circulación y complementar tu proceso de recuperación y bienestar."
+        icon="masajes"
+        link="/servicios#masajes"
+      />
+
+      <ServiceCard
+        title="Rehabilitación"
+        description="Programas diseñados para recuperación de lesiones y mejora de movilidad, con seguimiento profesional personalizado."
+        icon="rehabilitacion"
+        link="/servicios#rehabilitacion"
+      />
+
+      <ServiceCard
+        title="Terapias Complementarias"
+        description="Enfoques integrales que combinan diferentes técnicas para potenciar tu salud física y emocional."
+        icon="terapias"
+        link="/servicios#terapias"
+      />
+    </div>
+
+    <!-- Bottom CTA banner -->
+    <div class="mt-20 relative overflow-hidden rounded-3xl">
+      <!-- Rich gradient background -->
+      <div class="absolute inset-0 bg-gradient-to-br from-[#701D2A] via-[#8C2A3B] to-[#3A0C13]" aria-hidden="true"></div>
+      <!-- Decorative blobs inside the banner -->
+      <div class="absolute -top-16 -right-16 w-64 h-64 rounded-full bg-[#FF6B35]/15 blur-[60px] pointer-events-none" aria-hidden="true"></div>
+      <div class="absolute -bottom-12 -left-12 w-48 h-48 rounded-full bg-[#C83B08]/20 blur-[50px] pointer-events-none" aria-hidden="true"></div>
+      <!-- Subtle dot grid texture -->
+      <div class="absolute inset-0 opacity-[0.04]" style="background-image: radial-gradient(circle, #fff 1px, transparent 1px); background-size: 24px 24px;" aria-hidden="true"></div>
+
+      <div class="relative z-10 px-8 py-12 lg:px-16 lg:py-14 text-center">
+        <h3 class="font-montserrat text-2xl lg:text-3xl xl:text-4xl font-black text-white mb-3 leading-tight">
+          ¿Listo para transformar tu vida?
+        </h3>
+        <p class="font-quicksand text-lg text-white/80 mb-8 max-w-xl mx-auto">
+          Agendá tu clase de prueba gratuita y descubrí cómo podemos ayudarte a alcanzar tus objetivos.
+        </p>
+        <PrimaryButton
+          href="https://wa.me/5491168271296?text=Hola,%20me%20gustaría%20agendar%20una%20clase%20de%20prueba%20gratuita"
+          text="Agendar Clase de Prueba"
+          icon="whatsapp"
+          variant="whatsapp"
+          size="lg"
+          target="_blank"
+          rel="noopener noreferrer"
+          ariaLabel="Agendar clase de prueba gratuita por WhatsApp"
+        />
+      </div>
+    </div>
+
+  </div>
+</section>

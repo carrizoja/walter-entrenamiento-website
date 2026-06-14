@@ -1,0 +1,146 @@
+---
+// Hero Section - Walter Entrenamiento
+import PrimaryButton from './ux/PrimaryButton.astro';
+---
+
+<section
+  class="relative min-h-screen flex items-center justify-center overflow-hidden bg-white dark:bg-[#0f0508]"
+  aria-label="Sección principal"
+>
+  <!-- ======================================================
+       BACKGROUND: layered decorative blobs (CSS only, no JS)
+       ====================================================== -->
+  <div class="absolute inset-0 pointer-events-none" aria-hidden="true">
+    <!-- Large warm glow top-left -->
+    <div class="absolute -top-32 -left-32 w-[600px] h-[600px] rounded-full bg-[#FF6B35]/8 dark:bg-[#FF6B35]/12 blur-[80px]"></div>
+    <!-- Mid warm glow bottom-right -->
+    <div class="absolute -bottom-24 -right-24 w-[500px] h-[500px] rounded-full bg-[#701D2A]/10 dark:bg-[#701D2A]/20 blur-[80px]"></div>
+    <!-- Subtle center warmth -->
+    <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[400px] rounded-full bg-[#C83B08]/4 dark:bg-[#C83B08]/6 blur-[100px]"></div>
+    <!-- Decorative rotating ring (top-right) -->
+    <div class="absolute top-16 right-16 w-64 h-64 rounded-full border border-[#FF6B35]/12 dark:border-[#FF6B35]/20 animate-slow-rotate"></div>
+    <!-- Smaller ring -->
+    <div class="absolute top-24 right-24 w-40 h-40 rounded-full border border-[#C83B08]/10 dark:border-[#C83B08]/16 animate-slow-rotate" style="animation-direction: reverse; animation-duration: 14s;"></div>
+  </div>
+
+  <!-- ======================================================
+       MAIN CONTENT GRID
+       ====================================================== -->
+  <div class="relative z-10 max-w-7xl mx-auto px-6 lg:px-8 py-24 lg:py-0 w-full">
+    <div class="grid lg:grid-cols-2 gap-12 lg:gap-16 items-center min-h-[calc(100vh-5rem)]">
+
+      <!-- LEFT: Typography + CTAs -->
+      <div class="space-y-8 lg:space-y-10 order-2 lg:order-1">
+
+        <!-- Eyebrow tag -->
+        <div class="inline-flex items-center gap-2.5 bg-[#FF6B35]/10 dark:bg-[#FF6B35]/15 border border-[#FF6B35]/20 dark:border-[#FF6B35]/30 px-4 py-2 rounded-full">
+          <span class="w-2 h-2 rounded-full bg-[#FF6B35] animate-pulse-glow shrink-0"></span>
+          <span class="font-montserrat text-sm font-bold text-[#C83B08] dark:text-[#FF6B35] uppercase tracking-wider">
+            Personal Trainer — Almagro, Buenos Aires
+          </span>
+        </div>
+
+        <!-- Main headline — bold, two lines, gradient accent -->
+        <div class="space-y-2">
+          <h1 class="font-montserrat font-black leading-[0.95] text-[clamp(3rem,6vw,5.5rem)] xl:text-7xl text-gray-900 dark:text-white">
+            Transforma tu <span class="relative inline-block">
+              <span class="bg-gradient-to-r from-[#FF6B35] via-[#C83B08] to-[#701D2A] bg-clip-text text-transparent">
+                Bienestar
+              </span>
+              <!-- Underline accent for the gradient word -->
+              <span class="absolute -bottom-2 left-0 right-0 h-1 bg-gradient-to-r from-[#FF6B35] to-[#C83B08] rounded-full opacity-60" aria-hidden="true"></span>
+            </span>
+          </h1>
+          <p class="font-montserrat font-semibold text-[clamp(1.25rem,2.5vw,1.75rem)] text-[#701D2A] dark:text-[#C56C7A] leading-snug">
+            Cuerpo y mente en armonía
+          </p>
+        </div>
+
+        <!-- Body copy -->
+        <p class="font-quicksand text-[1.05rem] lg:text-xl text-gray-600 dark:text-gray-300 leading-relaxed max-w-lg">
+          Más de <strong class="font-bold text-gray-900 dark:text-white">30 años de experiencia</strong> en
+          entrenamiento personalizado, acompañamiento terapéutico y masajes especializados.
+          Un enfoque integral adaptado exactamente a vos.
+        </p>
+
+        <!-- CTAs -->
+        <div class="flex flex-col sm:flex-row gap-4">
+          <PrimaryButton
+            href="https://wa.me/5491168271296"
+            text="Clase de Prueba Gratis"
+            icon="whatsapp"
+            variant="primary"
+            size="lg"
+            target="_blank"
+            rel="noopener noreferrer"
+            ariaLabel="Reservar clase de prueba gratis por WhatsApp"
+          />
+          <PrimaryButton
+            href="#servicios"
+            text="Ver Servicios"
+            variant="secondary"
+            size="lg"
+          />
+        </div>
+
+        <!-- Trust indicators row -->
+        <div class="flex items-center gap-6 pt-2">
+          <div class="flex items-center gap-2">
+            <div class="flex -space-x-2">
+              <!-- Stylized avatar placeholders -->
+              {[
+                'from-[#FF6B35] to-[#C83B08]',
+                'from-[#701D2A] to-[#8C2A3B]',
+                'from-[#C56C7A] to-[#701D2A]',
+              ].map((gradient) => (
+                <div class={`w-8 h-8 rounded-full bg-gradient-to-br ${gradient} border-2 border-white dark:border-[#0f0508] flex items-center justify-center`}>
+                  <svg class="w-4 h-4 text-white/80" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                    <path d="M12 12c2.7 0 4.8-2.1 4.8-4.8S14.7 2.4 12 2.4 7.2 4.5 7.2 7.2 9.3 12 12 12zm0 2.4c-3.2 0-9.6 1.6-9.6 4.8v2.4h19.2v-2.4c0-3.2-6.4-4.8-9.6-4.8z"/>
+                  </svg>
+                </div>
+              ))}
+            </div>
+            <p class="font-quicksand text-sm font-semibold text-gray-600 dark:text-gray-400">
+              +100 clientes transformados
+            </p>
+          </div>
+
+          <div class="hidden sm:flex items-center gap-1.5">
+            {[1,2,3,4,5].map(() => (
+              <svg class="w-4 h-4 text-[#FF6B35]" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
+              </svg>
+            ))}
+            <span class="font-quicksand text-sm font-semibold text-gray-600 dark:text-gray-400 ml-1">5.0</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- RIGHT: Image + floating stat card -->
+      <div class="relative order-1 lg:order-2">
+        <!-- Main image container with gradient frame -->
+        <div class="relative mx-auto max-w-md lg:max-w-none">
+          <!-- Decorative gradient border frame -->
+          <div class="absolute -inset-1.5 rounded-3xl bg-gradient-to-br from-[#FF6B35]/40 via-[#C83B08]/20 to-[#701D2A]/40 dark:from-[#FF6B35]/30 dark:via-[#C83B08]/15 dark:to-[#701D2A]/30 blur-sm" aria-hidden="true"></div>
+
+          <!-- Image -->
+          <div class="relative aspect-[3/4] lg:aspect-[4/5] rounded-2xl overflow-hidden shadow-[0_20px_60px_rgba(0,0,0,0.18)] dark:shadow-[0_20px_60px_rgba(0,0,0,0.5)]">
+            <img
+              src="https://res.cloudinary.com/dx6sjvmg9/image/upload/v1759715478/walter_entrenamiento_b8yyai.png"
+              alt="Walter, entrenador personal con más de 30 años de experiencia en Buenos Aires"
+              class="w-full h-full object-cover object-center"
+              loading="eager"
+              fetchpriority="high"
+              width="480"
+              height="600"
+            />
+            <!-- Subtle inner overlay for depth -->
+            <div class="absolute inset-0 bg-gradient-to-t from-[#0f0508]/20 via-transparent to-transparent pointer-events-none" aria-hidden="true"></div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+</section>

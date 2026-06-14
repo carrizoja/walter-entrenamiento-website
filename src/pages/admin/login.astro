@@ -1,0 +1,129 @@
+---
+export const prerender = false;
+
+import { signInWithEmailAndPassword } from 'firebase/auth';
+import { auth } from '../../lib/firebase';
+import { adminAuth } from '../../lib/firebase-admin';
+
+let error = '';
+
+// Check if already logged in via session cookie
+if (Astro.cookies.has('session')) {
+  const sessionCookie = Astro.cookies.get('session')?.value;
+  try {
+    if (adminAuth && sessionCookie) {
+      await adminAuth.verifySessionCookie(sessionCookie, true);
+      return Astro.redirect('/admin');
+    }
+  } catch (err) {
+    // Invalid session
+    Astro.cookies.delete('session');
+  }
+}
+
+if (Astro.request.method === 'POST') {
+  const form = await Astro.request.formData();
+  const email = form.get('email') as string;
+  const password = form.get('password') as string;
+
+  try {
+    const userCredential = await signInWithEmailAndPassword(auth, email, password);
+    const idToken = await userCredential.user.getIdToken();
+    
+    if (adminAuth) {
+      // Create session cookie (expires in 5 days)
+      const expiresIn = 60 * 60 * 24 * 5 * 1000;
+      const sessionCookie = await adminAuth.createSessionCookie(idToken, { expiresIn });
+      
+      Astro.cookies.set('session', sessionCookie, {
+        maxAge: expiresIn,
+        httpOnly: true,
+        secure: import.meta.env.PROD,
+        path: '/',
+        sameSite: 'lax',
+      });
+      return Astro.redirect('/admin');
+    } else {
+      error = 'Server configuration error.';
+    }
+  } catch (err) {
+    console.error(err);
+    error = 'Email o contraseña incorrectos.';
+  }
+}
+---
+
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Iniciar sesión — Admin Walter Entrenamiento</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&family=Quicksand:wght@400;500;600&display=swap" rel="stylesheet" />
+    <style>
+      *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+      body { font-family: 'Quicksand', sans-serif; background: #111827; color: #e5e5e5; display: flex; align-items: center; justify-content: center; min-height: 100vh; }
+      h1, button, label { font-family: 'Montserrat', sans-serif; }
+    </style>
+  </head>
+  <body>
+    <div style="width: 100%; max-width: 400px; padding: 1rem;">
+      <!-- Card -->
+      <div style="background: #1f2937; border-radius: 1rem; padding: 2.5rem; border: 1px solid #374151;">
+
+        <!-- Header -->
+        <div style="text-align: center; margin-bottom: 2rem;">
+          <div style="font-family: 'Montserrat', sans-serif; font-weight: 700; font-size: 1.5rem; color: #FF6B35; margin-bottom: 0.5rem;">
+            Walter Admin
+          </div>
+          <p style="color: #9ca3af; font-size: 0.875rem;">Iniciá sesión para continuar</p>
+        </div>
+
+        <!-- Error message -->
+        {error && (
+          <div style="background: #450a0a; border: 1px solid #dc2626; border-radius: 0.5rem; padding: 0.75rem 1rem; margin-bottom: 1.5rem; color: #fca5a5; font-size: 0.875rem;">
+            {error}
+          </div>
+        )}
+
+        <!-- Form -->
+        <form method="POST" style="display: flex; flex-direction: column; gap: 1.25rem;">
+          <div>
+            <label style="display: block; font-size: 0.8rem; font-weight: 600; color: #d1d5db; margin-bottom: 0.5rem; text-transform: uppercase; letter-spacing: 0.05em;">
+              Email
+            </label>
+            <input
+              type="email"
+              name="email"
+              required
+              autocomplete="email"
+              style="width: 100%; padding: 0.75rem 1rem; background: #374151; border: 1px solid #4b5563; border-radius: 0.5rem; color: #f9fafb; font-family: 'Quicksand', sans-serif; font-size: 0.9rem; outline: none;"
+            />
+          </div>
+
+          <div>
+            <label style="display: block; font-size: 0.8rem; font-weight: 600; color: #d1d5db; margin-bottom: 0.5rem; text-transform: uppercase; letter-spacing: 0.05em;">
+              Contraseña
+            </label>
+            <input
+              type="password"
+              name="password"
+              required
+              autocomplete="current-password"
+              style="width: 100%; padding: 0.75rem 1rem; background: #374151; border: 1px solid #4b5563; border-radius: 0.5rem; color: #f9fafb; font-family: 'Quicksand', sans-serif; font-size: 0.9rem; outline: none;"
+            />
+          </div>
+
+          <button
+            type="submit"
+            style="width: 100%; padding: 0.875rem; background: linear-gradient(135deg, #FF6B35, #C83B08); color: white; border: none; border-radius: 0.5rem; font-family: 'Montserrat', sans-serif; font-weight: 600; font-size: 0.9rem; cursor: pointer; margin-top: 0.5rem;"
+          >
+            Iniciar sesión
+          </button>
+        </form>
+      </div>
+    </div>
+  </body>
+</html>

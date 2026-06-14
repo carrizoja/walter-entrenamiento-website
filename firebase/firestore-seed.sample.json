@@ -1,0 +1,36 @@
+{
+  "articles": [
+    {
+      "id": "welcome-to-walter-blog",
+      "title": "Bienvenido al blog",
+      "excerpt": "Ejemplo de articulo para validar la estructura de Firestore.",
+      "content": "<p>Contenido de ejemplo.</p>",
+      "category": "Entrenamiento",
+      "slug": "bienvenido-al-blog",
+      "featured": true,
+      "read_time": "5 min",
+      "cover_url": null,
+      "accent_from": "#FF6B35",
+      "accent_to": "#C83B08",
+      "published": true,
+      "created_at": "2026-06-12T00:00:00.000Z",
+      "updated_at": "2026-06-12T00:00:00.000Z"
+    }
+  ],
+  "gallery_items": [
+    {
+      "id": "sample-gallery-item",
+      "title": "Entrenamiento funcional",
+      "description": "Ejemplo de item de galeria para validar la estructura de Firestore.",
+      "category": "Entrenamientos",
+      "media_type": "photo",
+      "storage_path": "sample/training-photo.webp",
+      "public_url": "https://storage.googleapis.com/example-bucket/gallery/sample/training-photo.webp",
+      "thumbnail_url": null,
+      "duration": null,
+      "featured": false,
+      "sort_order": 0,
+      "created_at": "2026-06-12T00:00:00.000Z"
+    }
+  ]
+}

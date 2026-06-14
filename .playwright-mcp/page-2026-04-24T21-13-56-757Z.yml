@@ -1,0 +1,230 @@
+- generic [active] [ref=e1]:
+  - navigation "Navegación principal" [ref=e3]:
+    - generic [ref=e6]:
+      - link "Walter Entrenamiento — Inicio" [ref=e7] [cursor=pointer]:
+        - /url: /
+      - generic [ref=e9]:
+        - link "Inicio" [ref=e10] [cursor=pointer]:
+          - /url: /
+        - link "Sobre Walter" [ref=e11] [cursor=pointer]:
+          - /url: /sobre-walter
+          - text: Sobre Walter
+        - link "Servicios" [ref=e13] [cursor=pointer]:
+          - /url: /servicios
+        - link "Bienestar" [ref=e14] [cursor=pointer]:
+          - /url: /bienestar
+        - link "Galería" [ref=e15] [cursor=pointer]:
+          - /url: /galeria
+        - link "Contacto" [ref=e16] [cursor=pointer]:
+          - /url: /contacto
+      - generic [ref=e17]:
+        - button "Switch to dark mode" [ref=e18] [cursor=pointer]:
+          - generic [ref=e19]:
+            - img [ref=e21]
+            - img [ref=e25]
+          - img [ref=e28]
+        - link "Reservar Clase" [ref=e31] [cursor=pointer]:
+          - /url: https://wa.me/5491168271296
+          - img [ref=e32]
+          - generic [ref=e34]: Reservar Clase
+  - main [ref=e36]:
+    - generic [ref=e37]:
+      - generic [ref=e39]:
+        - generic [ref=e42]: El entrenador
+        - heading "Sobre Walter" [level=1] [ref=e43]
+        - paragraph [ref=e44]: Una trayectoria de más de 30 años dedicada a transformar vidas desde adentro hacia afuera.
+      - img [ref=e46]
+    - generic [ref=e50]:
+      - generic [ref=e51]:
+        - img "Walter Entrenador" [ref=e54]
+        - generic [ref=e56]:
+          - img [ref=e58]
+          - generic [ref=e60]:
+            - generic [ref=e61]: 30+
+            - generic [ref=e62]: Años de carrera
+      - generic [ref=e63]:
+        - generic [ref=e65]: Su historia
+        - heading "La Historia de Walter" [level=2] [ref=e66]:
+          - text: La Historia
+          - text: de Walter
+        - generic [ref=e67]:
+          - paragraph [ref=e68]:
+            - strong [ref=e69]: Profesor de gimnasia, preparador físico y entrenador personal
+            - text: con más de
+            - strong [ref=e70]: 30 años de experiencia
+            - text: en el acompañamiento integral de personas.
+          - paragraph [ref=e71]:
+            - text: Su formación y trayectoria combinan
+            - strong [ref=e72]: entrenamiento funcional, rehabilitación y terapias complementarias
+            - text: ", lo que le permite atender tanto la salud física como el bienestar emocional."
+          - paragraph [ref=e73]:
+            - text: Se distingue por su
+            - strong [ref=e74]: trato personalizado, la empatía y la disciplina
+            - text: ", cualidades que generan un vínculo de confianza con sus clientes. Su objetivo es motivar a cada persona a superarse día a día."
+          - paragraph [ref=e75]: Walter representa una marca con profesionalismo, compromiso y cercanía, inspirando a quienes buscan mejorar su calidad de vida.
+        - generic [ref=e76]:
+          - generic [ref=e77]:
+            - generic [ref=e78]: 30+
+            - generic [ref=e79]: Años de Experiencia
+          - generic [ref=e81]:
+            - generic [ref=e82]: 100+
+            - generic [ref=e83]: Clientes Transformados
+        - link "Hablar con Walter" [ref=e84] [cursor=pointer]:
+          - /url: https://wa.me/5491168271296
+          - img [ref=e85]
+          - generic [ref=e87]: Hablar con Walter
+    - generic [ref=e89]:
+      - heading "Misión & Visión" [level=2] [ref=e91]
+      - generic [ref=e92]:
+        - generic [ref=e95]:
+          - generic [ref=e96]:
+            - img [ref=e98]
+            - heading "Misión" [level=3] [ref=e100]
+          - paragraph [ref=e101]: Impulsar el bienestar integral de las personas a través del movimiento, la motivación y la disciplina, ofreciendo entrenamientos personalizados que se adapten a las necesidades físicas y emocionales de cada cliente, con un trato cercano, empático y profesional.
+        - generic [ref=e104]:
+          - generic [ref=e105]:
+            - img [ref=e107]
+            - heading "Visión" [level=3] [ref=e110]
+          - paragraph [ref=e111]: Consolidarme como referente en entrenamiento y bienestar, creando un espacio de confianza, seguridad y superación personal donde cada persona encuentre la motivación para alcanzar sus metas, expandiendo la marca con valores de empatía, respeto y disciplina.
+    - generic [ref=e113]:
+      - generic [ref=e114]:
+        - generic [ref=e117]: Lo que nos define
+        - heading "Nuestros Valores" [level=2] [ref=e118]
+        - paragraph [ref=e119]: Los pilares que guían cada entrenamiento y cada interacción con nuestros clientes.
+      - generic [ref=e120]:
+        - generic [ref=e121]:
+          - img [ref=e123]
+          - heading "Bienestar Integral" [level=3] [ref=e125]
+          - paragraph [ref=e126]: Cuidamos tanto tu salud física como tu bienestar emocional, entendiendo que son inseparables.
+        - generic [ref=e127]:
+          - img [ref=e129]
+          - heading "Disciplina" [level=3] [ref=e131]
+          - paragraph [ref=e132]: Fomentamos la constancia y el compromiso, claves fundamentales para alcanzar tus objetivos.
+        - generic [ref=e133]:
+          - img [ref=e135]
+          - heading "Empatía" [level=3] [ref=e137]
+          - paragraph [ref=e138]: Nos ponemos en tu lugar, comprendiendo tus desafíos y celebrando tus logros contigo.
+        - generic [ref=e139]:
+          - img [ref=e141]
+          - heading "Comprensión" [level=3] [ref=e143]
+          - paragraph [ref=e144]: Entendemos que cada persona es única, con necesidades y ritmos completamente diferentes.
+        - generic [ref=e145]:
+          - img [ref=e147]
+          - heading "Profesionalismo" [level=3] [ref=e149]
+          - paragraph [ref=e150]: 30 años de experiencia respaldados por formación continua y dedicación absoluta a cada cliente.
+        - generic [ref=e151]:
+          - img [ref=e153]
+          - heading "Respeto" [level=3] [ref=e155]
+          - paragraph [ref=e156]: Valoramos tu tiempo, tus límites y tu proceso personal de transformación en cada sesión.
+    - generic [ref=e162]:
+      - heading "¿Listo para comenzar tu transformación?" [level=2] [ref=e163]
+      - paragraph [ref=e164]: Uníte a nuestra comunidad y descubrí cómo podemos ayudarte a alcanzar tus objetivos de bienestar.
+      - generic [ref=e165]:
+        - link "Agenda tu Clase de Prueba" [ref=e166] [cursor=pointer]:
+          - /url: https://wa.me/5491168271296
+          - img [ref=e167]
+          - generic [ref=e169]: Agenda tu Clase de Prueba
+        - link "Ver Servicios" [ref=e170] [cursor=pointer]:
+          - /url: /servicios
+          - generic [ref=e171]: Ver Servicios
+          - img [ref=e172]
+  - contentinfo [ref=e174]:
+    - generic [ref=e176]:
+      - generic [ref=e177]:
+        - generic [ref=e178]:
+          - link "Walter Entrenamiento — Inicio" [ref=e179] [cursor=pointer]:
+            - /url: /
+            - img "Walter Entrenamiento" [ref=e181]
+          - paragraph [ref=e182]: Más de 30 años transformando vidas a través del movimiento, la disciplina y el bienestar integral en Buenos Aires.
+          - list "Redes sociales" [ref=e183]:
+            - listitem "Seguir en Instagram" [ref=e184] [cursor=pointer]:
+              - img [ref=e185]
+            - listitem "Contactar por WhatsApp" [ref=e187] [cursor=pointer]:
+              - img [ref=e188]
+        - navigation "Navegación del sitio" [ref=e190]:
+          - heading "Páginas" [level=3] [ref=e191]: Páginas
+          - list [ref=e193]:
+            - listitem [ref=e194]:
+              - link "Inicio" [ref=e195] [cursor=pointer]:
+                - /url: /
+            - listitem [ref=e196]:
+              - link "Sobre Walter" [ref=e197] [cursor=pointer]:
+                - /url: /sobre-walter
+            - listitem [ref=e198]:
+              - link "Servicios" [ref=e199] [cursor=pointer]:
+                - /url: /servicios
+            - listitem [ref=e200]:
+              - link "Bienestar" [ref=e201] [cursor=pointer]:
+                - /url: /bienestar
+            - listitem [ref=e202]:
+              - link "Galería" [ref=e203] [cursor=pointer]:
+                - /url: /galeria
+            - listitem [ref=e204]:
+              - link "Contacto" [ref=e205] [cursor=pointer]:
+                - /url: /#contacto
+        - navigation "Servicios ofrecidos" [ref=e206]:
+          - heading "Servicios" [level=3] [ref=e207]: Servicios
+          - list [ref=e209]:
+            - listitem [ref=e210]:
+              - link "Entrenamientos Personalizados" [ref=e211] [cursor=pointer]:
+                - /url: /servicios#entrenamientos
+            - listitem [ref=e212]:
+              - link "Entrenamientos Grupales" [ref=e213] [cursor=pointer]:
+                - /url: /servicios#grupales
+            - listitem [ref=e214]:
+              - link "Acompañamiento Terapéutico" [ref=e215] [cursor=pointer]:
+                - /url: /servicios#terapeutico
+            - listitem [ref=e216]:
+              - link "Masajes Especializados" [ref=e217] [cursor=pointer]:
+                - /url: /servicios#masajes
+            - listitem [ref=e218]:
+              - link "Rehabilitación" [ref=e219] [cursor=pointer]:
+                - /url: /servicios#rehabilitacion
+            - listitem [ref=e220]:
+              - link "Terapias Complementarias" [ref=e221] [cursor=pointer]:
+                - /url: /servicios#terapias
+        - generic [ref=e222]:
+          - heading "Contacto" [level=3] [ref=e223]: Contacto
+          - link "+54 9 11 6827-1296" [ref=e225] [cursor=pointer]:
+            - /url: https://wa.me/5491168271296
+            - img [ref=e227]
+            - generic [ref=e229]: +54 9 11 6827-1296
+          - generic [ref=e230]:
+            - img [ref=e232]
+            - generic [ref=e235]:
+              - text: Almagro, Buenos Aires
+              - text: Argentina
+          - generic [ref=e236]:
+            - img [ref=e238]
+            - generic [ref=e240]:
+              - text: "Lun–Vie: 7:00–21:00"
+              - text: "Sáb: 8:00–14:00"
+      - generic [ref=e242]:
+        - paragraph [ref=e243]: © 2026 Walter Entrenamiento. Todos los derechos reservados.
+        - generic [ref=e244]:
+          - link "Política de Privacidad" [ref=e245] [cursor=pointer]:
+            - /url: /politica-privacidad
+          - link "Términos y Condiciones" [ref=e246] [cursor=pointer]:
+            - /url: /terminos
+          - paragraph [ref=e247]:
+            - text: Diseñado por
+            - link "José Carrizo" [ref=e248] [cursor=pointer]:
+              - /url: https://www.josecarrizo-dev.com
+  - button "Abrir chat de asistente virtual" [ref=e250]:
+    - img [ref=e251]
+    - img [ref=e255]
+  - generic [ref=e261]:
+    - button "Menu" [ref=e262]:
+      - img [ref=e264]
+      - generic: Menu
+    - button "Inspect" [ref=e268]:
+      - img [ref=e270]
+      - generic: Inspect
+    - button "Audit" [ref=e272]:
+      - generic [ref=e273]:
+        - img [ref=e274]
+        - img [ref=e277]
+      - generic: Audit
+    - button "Settings" [ref=e280]:
+      - img [ref=e282]
+      - generic: Settings

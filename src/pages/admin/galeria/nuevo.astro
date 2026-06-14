@@ -1,0 +1,214 @@
+---
+export const prerender = false;
+
+import AdminLayout from '../../../layouts/AdminLayout.astro';
+import { requireAuth } from '../../../lib/auth';
+import { upsertGalleryItem } from '../../../lib/queries';
+import { uploadMedia, generateStoragePath, getPublicUrl } from '../../../lib/storage';
+
+const session = await requireAuth(Astro);
+if (session instanceof Response) return session;
+
+let error = '';
+
+if (Astro.request.method === 'POST') {
+  const form = await Astro.request.formData();
+  const title = (form.get('title') as string).trim();
+  const description = (form.get('description') as string).trim();
+  const category = form.get('category') as string;
+  const media_type = form.get('media_type') as 'photo' | 'video';
+  const featured = form.get('featured') === 'on';
+  const sort_order = parseInt(form.get('sort_order') as string) || 0;
+  const duration = (form.get('duration') as string).trim() || null;
+
+  const mediaFile = form.get('media_file') as File | null;
+  const thumbFile = form.get('thumbnail') as File | null;
+
+  if (!mediaFile || mediaFile.size === 0) {
+    error = 'Debés seleccionar un archivo para subir.';
+  } else {
+    try {
+      const storagePath = generateStoragePath(mediaFile.name);
+      const public_url = await uploadMedia('gallery', mediaFile, storagePath);
+
+      let thumbnail_url: string | null = null;
+      if (thumbFile && thumbFile.size > 0) {
+        const thumbPath = `thumbs/${generateStoragePath(thumbFile.name)}`;
+        thumbnail_url = await uploadMedia('gallery', thumbFile, thumbPath);
+      }
+
+      await upsertGalleryItem({
+        title, description, category, media_type,
+        storage_path: storagePath,
+        public_url,
+        thumbnail_url,
+        duration,
+        featured,
+        sort_order,
+      });
+
+      return Astro.redirect('/admin/galeria');
+    } catch (e: any) {
+      error = 'Error al subir el archivo: ' + (e.message ?? 'Intentá de nuevo.');
+    }
+  }
+}
+
+const GALLERY_CATEGORIES = ['Entrenamientos', 'Grupales', 'Ejercicios', 'Masajes', 'Recuperación', 'Instalaciones'];
+---
+
+<AdminLayout title="Subir foto/video" activePage="galeria">
+  <div style="max-width: 700px;">
+    <div style="display: flex; align-items: center; gap: 1rem; margin-bottom: 1.5rem;">
+      <a href="/admin/galeria" style="color: #9ca3af; text-decoration: none; font-size: 0.875rem;">← Volver</a>
+      <h1 style="font-family: 'Montserrat', sans-serif; font-size: 1.5rem; font-weight: 700; color: #f9fafb;">Subir foto/video</h1>
+    </div>
+
+    {error && (
+      <div style="background: #450a0a; border: 1px solid #dc2626; border-radius: 0.5rem; padding: 0.75rem 1rem; margin-bottom: 1.5rem; color: #fca5a5; font-size: 0.875rem;">
+        {error}
+      </div>
+    )}
+
+    <form method="POST" enctype="multipart/form-data" style="display: flex; flex-direction: column; gap: 1.25rem;" id="gallery-form">
+
+      <!-- Type selector -->
+      <div style="background: #1f2937; border: 1px solid #374151; border-radius: 0.75rem; padding: 1.5rem;">
+        <h2 style="font-family: 'Montserrat', sans-serif; font-size: 0.875rem; font-weight: 600; color: #9ca3af; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 1rem;">Tipo de contenido</h2>
+        <div style="display: flex; gap: 1rem;">
+          <label style="flex: 1; cursor: pointer;">
+            <input type="radio" name="media_type" value="photo" checked style="display: none;" id="type-photo" />
+            <div class="type-btn" id="btn-photo" style="padding: 1rem; border: 2px solid #FF6B35; border-radius: 0.75rem; text-align: center; background: #1a0e00;">
+              <svg width="28" height="28" fill="none" stroke="#FF6B35" stroke-width="2" viewBox="0 0 24 24" style="margin: 0 auto 0.5rem;">
+                <rect x="3" y="3" width="18" height="18" rx="2"/>
+                <circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/>
+              </svg>
+              <div style="font-family: 'Montserrat', sans-serif; font-weight: 600; font-size: 0.875rem; color: #FF6B35;">Foto</div>
+            </div>
+          </label>
+          <label style="flex: 1; cursor: pointer;">
+            <input type="radio" name="media_type" value="video" style="display: none;" id="type-video" />
+            <div class="type-btn" id="btn-video" style="padding: 1rem; border: 2px solid #374151; border-radius: 0.75rem; text-align: center;">
+              <svg width="28" height="28" fill="none" stroke="#9ca3af" stroke-width="2" viewBox="0 0 24 24" style="margin: 0 auto 0.5rem;">
+                <polygon points="5 3 19 12 5 21 5 3"/>
+              </svg>
+              <div style="font-family: 'Montserrat', sans-serif; font-weight: 600; font-size: 0.875rem; color: #9ca3af;">Video</div>
+            </div>
+          </label>
+        </div>
+      </div>
+
+      <!-- File upload -->
+      <div style="background: #1f2937; border: 1px solid #374151; border-radius: 0.75rem; padding: 1.5rem; display: flex; flex-direction: column; gap: 1rem;">
+        <h2 style="font-family: 'Montserrat', sans-serif; font-size: 0.875rem; font-weight: 600; color: #9ca3af; text-transform: uppercase; letter-spacing: 0.05em;">Archivo</h2>
+
+        <div id="file-photo">
+          <label style="display: block; font-size: 0.8rem; font-weight: 600; color: #d1d5db; margin-bottom: 0.5rem;">FOTO *</label>
+          <input type="file" name="media_file" accept="image/jpeg,image/png,image/webp" id="file-input-photo"
+            style="width: 100%; padding: 0.75rem; background: #374151; border: 1px solid #4b5563; border-radius: 0.5rem; color: #9ca3af; font-size: 0.875rem;" />
+          <p style="color: #6b7280; font-size: 0.75rem; margin-top: 0.375rem;">JPG, PNG o WebP. Máximo 4 MB.</p>
+        </div>
+
+        <div id="file-video" style="display: none;">
+          <div style="background: #1e1b4b; border: 1px solid #4c1d95; border-radius: 0.5rem; padding: 0.75rem 1rem; margin-bottom: 1rem; color: #a78bfa; font-size: 0.8rem;">
+            Para videos grandes (+4 MB), subí primero el video directamente desde la galería de Supabase y pegá la URL.
+          </div>
+          <label style="display: block; font-size: 0.8rem; font-weight: 600; color: #d1d5db; margin-bottom: 0.5rem;">VIDEO *</label>
+          <input type="file" name="media_file" accept="video/mp4,video/webm" id="file-input-video"
+            style="width: 100%; padding: 0.75rem; background: #374151; border: 1px solid #4b5563; border-radius: 0.5rem; color: #9ca3af; font-size: 0.875rem;" />
+          <div style="margin-top: 1rem;">
+            <label style="display: block; font-size: 0.8rem; font-weight: 600; color: #d1d5db; margin-bottom: 0.5rem;">MINIATURA (opcional)</label>
+            <input type="file" name="thumbnail" accept="image/jpeg,image/png,image/webp"
+              style="width: 100%; padding: 0.75rem; background: #374151; border: 1px solid #4b5563; border-radius: 0.5rem; color: #9ca3af; font-size: 0.875rem;" />
+          </div>
+          <div style="margin-top: 1rem;">
+            <label style="display: block; font-size: 0.8rem; font-weight: 600; color: #d1d5db; margin-bottom: 0.5rem;">DURACIÓN (ej: 2:30)</label>
+            <input type="text" name="duration" placeholder="2:30"
+              style="width: 200px; padding: 0.75rem 1rem; background: #374151; border: 1px solid #4b5563; border-radius: 0.5rem; color: #f9fafb; font-family: 'Quicksand', sans-serif; font-size: 0.9rem;" />
+          </div>
+        </div>
+      </div>
+
+      <!-- Metadata -->
+      <div style="background: #1f2937; border: 1px solid #374151; border-radius: 0.75rem; padding: 1.5rem; display: flex; flex-direction: column; gap: 1.25rem;">
+        <h2 style="font-family: 'Montserrat', sans-serif; font-size: 0.875rem; font-weight: 600; color: #9ca3af; text-transform: uppercase; letter-spacing: 0.05em;">Información</h2>
+
+        <div>
+          <label style="display: block; font-size: 0.8rem; font-weight: 600; color: #d1d5db; margin-bottom: 0.5rem;">TÍTULO *</label>
+          <input type="text" name="title" required
+            style="width: 100%; padding: 0.75rem 1rem; background: #374151; border: 1px solid #4b5563; border-radius: 0.5rem; color: #f9fafb; font-family: 'Quicksand', sans-serif; font-size: 0.9rem;" />
+        </div>
+
+        <div>
+          <label style="display: block; font-size: 0.8rem; font-weight: 600; color: #d1d5db; margin-bottom: 0.5rem;">DESCRIPCIÓN</label>
+          <textarea name="description" rows="2"
+            style="width: 100%; padding: 0.75rem 1rem; background: #374151; border: 1px solid #4b5563; border-radius: 0.5rem; color: #f9fafb; font-family: 'Quicksand', sans-serif; font-size: 0.9rem; resize: vertical;"></textarea>
+        </div>
+
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+          <div>
+            <label style="display: block; font-size: 0.8rem; font-weight: 600; color: #d1d5db; margin-bottom: 0.5rem;">CATEGORÍA *</label>
+            <select name="category" required
+              style="width: 100%; padding: 0.75rem 1rem; background: #374151; border: 1px solid #4b5563; border-radius: 0.5rem; color: #f9fafb; font-family: 'Quicksand', sans-serif; font-size: 0.9rem;">
+              {GALLERY_CATEGORIES.map(cat => <option value={cat}>{cat}</option>)}
+            </select>
+          </div>
+          <div>
+            <label style="display: block; font-size: 0.8rem; font-weight: 600; color: #d1d5db; margin-bottom: 0.5rem;">ORDEN (número)</label>
+            <input type="number" name="sort_order" value="0" min="0"
+              style="width: 100%; padding: 0.75rem 1rem; background: #374151; border: 1px solid #4b5563; border-radius: 0.5rem; color: #f9fafb; font-family: 'Quicksand', sans-serif; font-size: 0.9rem;" />
+          </div>
+        </div>
+      </div>
+
+      <!-- Featured -->
+      <div style="background: #1f2937; border: 1px solid #374151; border-radius: 0.75rem; padding: 1.5rem;">
+        <label style="display: flex; align-items: center; gap: 0.75rem; cursor: pointer;">
+          <input type="checkbox" name="featured" style="width: 18px; height: 18px; accent-color: #FF6B35;" />
+          <div>
+            <div style="font-family: 'Montserrat', sans-serif; font-weight: 600; font-size: 0.875rem; color: #f9fafb;">Contenido destacado</div>
+            <div style="color: #6b7280; font-size: 0.775rem;">Los videos destacados aparecen en la sección "Video Highlights"</div>
+          </div>
+        </label>
+      </div>
+
+      <!-- Submit -->
+      <div style="display: flex; gap: 1rem; justify-content: flex-end;">
+        <a href="/admin/galeria" style="padding: 0.75rem 1.5rem; background: #374151; color: #d1d5db; border-radius: 0.5rem; font-family: 'Montserrat', sans-serif; font-weight: 600; font-size: 0.875rem; text-decoration: none;">
+          Cancelar
+        </a>
+        <button type="submit"
+          style="padding: 0.75rem 1.5rem; background: linear-gradient(135deg, #a78bfa, #7c3aed); color: white; border: none; border-radius: 0.5rem; font-family: 'Montserrat', sans-serif; font-weight: 600; font-size: 0.875rem; cursor: pointer;">
+          Subir
+        </button>
+      </div>
+    </form>
+  </div>
+</AdminLayout>
+
+<script>
+const photoRadio = document.getElementById('type-photo') as HTMLInputElement;
+const videoRadio = document.getElementById('type-video') as HTMLInputElement;
+const filePhoto = document.getElementById('file-photo')!;
+const fileVideo = document.getElementById('file-video')!;
+const btnPhoto = document.getElementById('btn-photo')!;
+const btnVideo = document.getElementById('btn-video')!;
+
+function updateTypeUI(isPhoto: boolean) {
+  filePhoto.style.display = isPhoto ? '' : 'none';
+  fileVideo.style.display = isPhoto ? 'none' : '';
+
+  btnPhoto.style.borderColor = isPhoto ? '#FF6B35' : '#374151';
+  btnPhoto.style.background = isPhoto ? '#1a0e00' : '';
+  (btnPhoto.querySelector('div') as HTMLElement).style.color = isPhoto ? '#FF6B35' : '#9ca3af';
+  (btnPhoto.querySelector('svg') as SVGElement).setAttribute('stroke', isPhoto ? '#FF6B35' : '#9ca3af');
+
+  btnVideo.style.borderColor = !isPhoto ? '#a78bfa' : '#374151';
+  btnVideo.style.background = !isPhoto ? '#1e1b4b' : '';
+  (btnVideo.querySelector('div') as HTMLElement).style.color = !isPhoto ? '#a78bfa' : '#9ca3af';
+  (btnVideo.querySelector('svg') as SVGElement).setAttribute('stroke', !isPhoto ? '#a78bfa' : '#9ca3af');
+}
+
+photoRadio?.addEventListener('change', () => updateTypeUI(true));
+videoRadio?.addEventListener('change', () => updateTypeUI(false));
+</script>

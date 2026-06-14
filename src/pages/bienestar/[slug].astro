@@ -1,0 +1,211 @@
+---
+export const prerender = false;
+
+import Layout from '../../layouts/Layout.astro';
+import PrimaryButton from '../../components/ux/PrimaryButton.astro';
+import { getArticleBySlug, getPublishedArticles } from '../../lib/queries';
+
+const { slug } = Astro.params;
+
+let article: Awaited<ReturnType<typeof getArticleBySlug>> = null;
+let related: Awaited<ReturnType<typeof getPublishedArticles>> = [];
+
+try {
+  article = await getArticleBySlug(slug!);
+  if (article) {
+    const allArticles = await getPublishedArticles();
+    related = allArticles
+      .filter(a => a.category === article!.category && a.id !== article!.id)
+      .slice(0, 3);
+  }
+} catch (err) {
+  console.error('[bienestar/[slug]] Firebase fetch failed:', err);
+}
+
+if (!article) return new Response('Artículo no encontrado', { status: 404 });
+
+function formatDate(dateStr: string) {
+  return new Date(dateStr).toLocaleDateString('es-AR', {
+    day: 'numeric', month: 'long', year: 'numeric'
+  });
+}
+---
+
+<Layout>
+  <!-- Hero -->
+  <section class="relative pt-32 pb-0 bg-white dark:bg-[#0f0508] overflow-hidden">
+    <div class="absolute inset-0 pointer-events-none" aria-hidden="true">
+      <div class="absolute -top-32 -right-32 w-[600px] h-[600px] rounded-full bg-[#FF6B35]/7 dark:bg-[#FF6B35]/10 blur-[100px]"></div>
+    </div>
+
+    <div class="relative z-10 max-w-4xl mx-auto px-6 lg:px-8 pb-16">
+      <!-- Breadcrumb -->
+      <nav class="flex items-center gap-2 font-quicksand text-sm text-gray-500 dark:text-gray-400 mb-8">
+        <a href="/" class="hover:text-[#FF6B35] transition-colors">Inicio</a>
+        <span aria-hidden="true">›</span>
+        <a href="/bienestar" class="hover:text-[#FF6B35] transition-colors">Bienestar</a>
+        <span aria-hidden="true">›</span>
+        <span class="text-gray-400 line-clamp-1">{article.title}</span>
+      </nav>
+
+      <!-- Category badge -->
+      <div class="mb-5">
+        <span
+          class="inline-block px-4 py-1.5 rounded-full font-montserrat text-xs font-bold text-white"
+          style={`background: linear-gradient(135deg, ${article.accent_from}, ${article.accent_to})`}
+        >
+          {article.category}
+        </span>
+      </div>
+
+      <!-- Title -->
+      <h1 class="font-montserrat text-4xl lg:text-5xl font-black leading-tight text-gray-900 dark:text-white mb-6">
+        {article.title}
+      </h1>
+
+      <!-- Meta -->
+      <div class="flex flex-wrap items-center gap-4 font-quicksand text-sm text-gray-500 dark:text-gray-400 mb-8">
+        <span>{formatDate(article.created_at)}</span>
+        <span aria-hidden="true">·</span>
+        <span>{article.read_time} de lectura</span>
+        {article.featured && (
+          <>
+            <span aria-hidden="true">·</span>
+            <span class="text-[#FF6B35] font-semibold">★ Destacado</span>
+          </>
+        )}
+      </div>
+
+      <!-- Excerpt -->
+      <p class="font-quicksand text-xl text-gray-600 dark:text-gray-300 leading-relaxed border-l-4 pl-5" style={`border-color: ${article.accent_from}`}>
+        {article.excerpt}
+      </p>
+    </div>
+
+    <!-- Cover image or gradient header -->
+    {article.cover_url ? (
+      <div class="max-w-4xl mx-auto px-6 lg:px-8 pb-16">
+        <img
+          src={article.cover_url}
+          alt={article.title}
+          class="w-full rounded-2xl object-cover"
+          style="max-height: 420px;"
+        />
+      </div>
+    ) : (
+      <div class="max-w-4xl mx-auto px-6 lg:px-8 pb-16">
+        <div
+          class="w-full h-48 rounded-2xl flex items-center justify-center"
+          style={`background: linear-gradient(135deg, ${article.accent_from} 0%, ${article.accent_to} 100%)`}
+        >
+          <svg class="w-20 h-20 text-white/20" fill="none" stroke="currentColor" stroke-width="1" viewBox="0 0 24 24" aria-hidden="true">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
+          </svg>
+        </div>
+      </div>
+    )}
+
+    <div aria-hidden="true">
+      <svg viewBox="0 0 1440 80" fill="none" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none" class="w-full h-16 lg:h-20">
+        <path d="M0 40C240 80 480 0 720 40C960 80 1200 0 1440 40V80H0V40Z" class="fill-gray-50 dark:fill-[#130308]"/>
+      </svg>
+    </div>
+  </section>
+
+  <!-- Article content -->
+  <section class="py-16 bg-gray-50 dark:bg-[#130308]">
+    <div class="max-w-3xl mx-auto px-6 lg:px-8">
+      <div
+        class="prose prose-lg dark:prose-invert max-w-none font-quicksand
+               prose-headings:font-montserrat prose-headings:font-black
+               prose-h2:text-2xl prose-h2:text-gray-900 dark:prose-h2:text-white
+               prose-p:text-gray-700 dark:prose-p:text-gray-300 prose-p:leading-relaxed
+               prose-strong:text-gray-900 dark:prose-strong:font-bold
+               prose-li:text-gray-700 dark:prose-li:text-gray-300
+               prose-a:text-[#FF6B35] prose-a:no-underline hover:prose-a:underline"
+      >
+        <Fragment set:html={article.content} />
+      </div>
+
+      <!-- Back link -->
+      <div class="mt-12 pt-8 border-t border-gray-200 dark:border-white/10">
+        <a
+          href="/bienestar"
+          class="inline-flex items-center gap-2 font-montserrat font-bold text-sm text-[#FF6B35] hover:text-[#C83B08] transition-colors duration-300"
+        >
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24" aria-hidden="true">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M7 16l-4-4m0 0l4-4m-4 4h18"/>
+          </svg>
+          Volver al Blog de Bienestar
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Related articles -->
+  {related.length > 0 && (
+    <section class="py-20 bg-white dark:bg-[#0f0508]">
+      <div class="max-w-7xl mx-auto px-6 lg:px-8">
+        <h2 class="font-montserrat text-2xl font-black text-gray-900 dark:text-white mb-8">
+          Artículos relacionados
+        </h2>
+        <div class="grid md:grid-cols-3 gap-6">
+          {related.map(post => (
+            <article class="group bg-gray-50 dark:bg-[#1a0509] rounded-2xl overflow-hidden border border-gray-100 dark:border-white/5 hover:border-[#FF6B35]/20 transition-all duration-400 hover:-translate-y-1">
+              <div class="h-1 w-full" style={`background: linear-gradient(to right, ${post.accent_from}, ${post.accent_to})`} aria-hidden="true"></div>
+              <div class="p-6 space-y-3">
+                <span
+                  class="inline-block px-3 py-1 rounded-full font-montserrat text-xs font-bold text-white"
+                  style={`background: linear-gradient(135deg, ${post.accent_from}, ${post.accent_to})`}
+                >
+                  {post.category}
+                </span>
+                <h3 class="font-montserrat text-lg font-black text-gray-900 dark:text-white group-hover:text-[#FF6B35] transition-colors line-clamp-2">
+                  {post.title}
+                </h3>
+                <p class="font-quicksand text-gray-600 dark:text-gray-400 text-sm leading-relaxed line-clamp-3">
+                  {post.excerpt}
+                </p>
+                <a
+                  href={`/bienestar/${post.slug}`}
+                  class="inline-flex items-center gap-1.5 font-montserrat font-bold text-xs text-[#FF6B35] hover:text-[#C83B08] transition-colors"
+                >
+                  Leer más
+                  <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24" aria-hidden="true">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7"/>
+                  </svg>
+                </a>
+              </div>
+            </article>
+          ))}
+        </div>
+      </div>
+    </section>
+  )}
+
+  <!-- CTA -->
+  <section class="py-20 bg-gray-50 dark:bg-[#130308]">
+    <div class="max-w-3xl mx-auto px-6 text-center">
+      <div class="relative overflow-hidden rounded-3xl">
+        <div class="absolute inset-0 bg-gradient-to-br from-[#701D2A] via-[#8C2A3B] to-[#3A0C13]" aria-hidden="true"></div>
+        <div class="relative z-10 px-8 py-12 space-y-5">
+          <h2 class="font-montserrat text-2xl lg:text-3xl font-black text-white">
+            ¿Te gustó el artículo?
+          </h2>
+          <p class="font-quicksand text-white/80">
+            Contactanos para recibir asesoramiento personalizado y empezar tu transformación.
+          </p>
+          <PrimaryButton
+            href="https://wa.me/5491168271296?text=Hola,%20leí%20un%20artículo%20y%20me%20gustaría%20más%20información"
+            text="Consultame por WhatsApp"
+            icon="whatsapp"
+            variant="whatsapp"
+            size="lg"
+            target="_blank"
+            rel="noopener noreferrer"
+          />
+        </div>
+      </div>
+    </div>
+  </section>
+</Layout>

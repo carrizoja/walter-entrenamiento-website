@@ -1,0 +1,59 @@
+---
+import '../styles/global.css';
+import Navbar from '../components/Navbar';
+import Footer from '../components/Footer.astro';
+import AiChatbot from '../components/AiChatbot.astro';
+
+interface Props {
+  title?: string;
+  description?: string;
+}
+
+const {
+  title = 'Walter Entrenamiento - Transforma tu Bienestar',
+  description = 'Walter Entrenamiento - Más de 30 años de experiencia en entrenamiento personalizado, acompañamiento terapéutico y bienestar integral.',
+} = Astro.props;
+---
+
+<!doctype html>
+<html lang="es">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width" />
+		<link rel="icon" type="image/x-icon" href="/favicon.ico" sizes="any" />
+		<link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+		<meta name="generator" content={Astro.generator} />
+		<meta name="description" content={description} />
+		<title>{title}</title>
+		
+		<!-- Prevent flash of unstyled content for dark mode -->
+		<script is:inline>
+			// Load theme immediately before page renders
+			const theme = localStorage.getItem('theme') || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+			if (theme === 'dark') {
+				document.documentElement.classList.add('dark');
+			} else {
+				document.documentElement.classList.remove('dark');
+			}
+		</script>
+
+		<slot name="head" />
+	</head>
+	<body class="bg-white dark:bg-[#0f0508] text-gray-900 dark:text-gray-100 font-quicksand transition-colors duration-300">
+		<Navbar client:load />
+		<main>
+			<slot />
+		</main>
+		<Footer />
+		<AiChatbot position="bottom-right" />
+	</body>
+</html>
+
+<style>
+	html,
+	body {
+		margin: 0;
+		width: 100%;
+		height: 100%;
+	}
+</style>

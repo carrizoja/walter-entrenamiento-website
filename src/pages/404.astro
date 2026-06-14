@@ -1,0 +1,77 @@
+---
+import Layout from '../layouts/Layout.astro';
+import PrimaryButton from '../components/ux/PrimaryButton.astro';
+
+const title = 'Página no encontrada — Walter Entrenamiento';
+const description =
+  'La página que buscás no existe o fue movida. Volvé al inicio para descubrir entrenamiento personalizado, masajes y bienestar integral con Walter.';
+---
+
+<Layout title={title} description={description}>
+  <meta slot="head" name="robots" content="noindex" />
+
+  <section
+    class="relative flex items-center justify-center overflow-hidden bg-white dark:bg-[#0f0508] min-h-[calc(100vh-5rem)] py-24 lg:py-32"
+    aria-label="Página no encontrada"
+  >
+    <!-- Decorative background blobs (CSS only, no JS) -->
+    <div class="absolute inset-0 pointer-events-none" aria-hidden="true">
+      <div class="absolute -top-32 -left-32 w-[520px] h-[520px] rounded-full bg-[#FF6B35]/8 dark:bg-[#FF6B35]/12 blur-[80px]"></div>
+      <div class="absolute -bottom-24 -right-24 w-[480px] h-[480px] rounded-full bg-[#701D2A]/10 dark:bg-[#701D2A]/20 blur-[80px]"></div>
+      <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[700px] h-[360px] rounded-full bg-[#C83B08]/4 dark:bg-[#C83B08]/6 blur-[100px]"></div>
+    </div>
+
+    <div class="relative z-10 max-w-3xl mx-auto px-6 lg:px-8 text-center pb-32 sm:pb-24">
+      <!-- Stylized 404 mark -->
+      <p
+        class="font-montserrat font-black leading-none tracking-tight select-none text-[clamp(7rem,22vw,16rem)] bg-gradient-to-r from-[#FF6B35] via-[#C83B08] to-[#701D2A] bg-clip-text text-transparent"
+        aria-hidden="true"
+      >
+        404
+      </p>
+
+      <!-- Heading -->
+      <h1 class="mt-2 font-montserrat font-black leading-tight text-gray-900 dark:text-white text-[clamp(2rem,4.5vw,3rem)]">
+        Página no encontrada
+      </h1>
+
+      <!-- Supporting copy -->
+      <p class="mt-5 font-quicksand text-base sm:text-lg text-gray-600 dark:text-gray-300 leading-relaxed max-w-xl mx-auto">
+        Parece que la página que buscás no existe o fue movida. Probá volver al
+        inicio o explorá las secciones más visitadas del sitio.
+      </p>
+
+      <!-- Primary CTA -->
+      <div class="mt-10 flex justify-center">
+        <PrimaryButton
+          href="/"
+          text="Volver al inicio"
+          icon="arrow"
+          variant="primary"
+          size="lg"
+          ariaLabel="Volver al inicio"
+        />
+      </div>
+
+      <!-- Secondary recovery links -->
+      <nav
+        class="mt-8 flex flex-wrap items-center justify-center gap-x-6 gap-y-3"
+        aria-label="Enlaces de recuperación"
+      >
+        <a
+          href="/bienestar"
+          class="font-montserrat font-bold text-sm sm:text-base uppercase tracking-wider text-[#701D2A] dark:text-[#FF6B35] hover:text-[#C83B08] dark:hover:text-[#FF7A45] underline-offset-4 hover:underline focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-3 focus-visible:outline-[#FF6B35] rounded transition-colors duration-300"
+        >
+          Bienestar
+        </a>
+        <span class="hidden sm:inline-block w-1.5 h-1.5 rounded-full bg-[#FF6B35]/50 dark:bg-[#FF6B35]/70" aria-hidden="true"></span>
+        <a
+          href="/contacto"
+          class="font-montserrat font-bold text-sm sm:text-base uppercase tracking-wider text-[#701D2A] dark:text-[#FF6B35] hover:text-[#C83B08] dark:hover:text-[#FF7A45] underline-offset-4 hover:underline focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-3 focus-visible:outline-[#FF6B35] rounded transition-colors duration-300"
+        >
+          Contacto
+        </a>
+      </nav>
+    </div>
+  </section>
+</Layout>

@@ -1,0 +1,272 @@
+---
+import Layout from '../layouts/Layout.astro';
+import PrimaryButton from '../components/ux/PrimaryButton.astro';
+---
+
+<Layout>
+  <!-- ============================================================
+       HERO
+       ============================================================ -->
+  <section class="relative pt-32 pb-0 bg-white dark:bg-[#0f0508] overflow-hidden">
+    <!-- Blobs -->
+    <div class="absolute inset-0 pointer-events-none" aria-hidden="true">
+      <div class="absolute -top-32 -right-32 w-[600px] h-[600px] rounded-full bg-[#FF6B35]/7 dark:bg-[#FF6B35]/10 blur-[100px]"></div>
+      <div class="absolute top-1/2 -left-24 w-[400px] h-[400px] rounded-full bg-[#701D2A]/6 dark:bg-[#701D2A]/15 blur-[80px]"></div>
+    </div>
+
+    <div class="relative z-10 max-w-7xl mx-auto px-6 lg:px-8 pb-24">
+      <div class="text-center space-y-6 max-w-3xl mx-auto">
+        <!-- Eyebrow -->
+        <div class="inline-flex items-center gap-2 bg-[#FF6B35]/10 dark:bg-[#FF6B35]/15 border border-[#FF6B35]/20 px-4 py-1.5 rounded-full">
+          <span class="w-1.5 h-1.5 rounded-full bg-[#FF6B35] animate-pulse-glow" aria-hidden="true"></span>
+          <span class="font-montserrat text-xs font-bold text-[#C83B08] dark:text-[#FF6B35] uppercase tracking-widest">El entrenador</span>
+        </div>
+
+        <h1 class="font-montserrat text-5xl lg:text-7xl font-black leading-[0.95] text-gray-900 dark:text-white">
+          Sobre <span class="bg-gradient-to-r from-[#FF6B35] via-[#C83B08] to-[#701D2A] bg-clip-text text-transparent">Walter</span>
+        </h1>
+        <p class="font-quicksand text-xl text-gray-600 dark:text-gray-400 leading-relaxed">
+          Una trayectoria de más de 30 años dedicada a transformar vidas desde adentro hacia afuera.
+        </p>
+      </div>
+    </div>
+
+    <!-- Wave divider -->
+    <div class="relative" aria-hidden="true">
+      <svg viewBox="0 0 1440 80" fill="none" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none" class="w-full h-16 lg:h-20">
+        <path d="M0 40C240 80 480 0 720 40C960 80 1200 0 1440 40V80H0V40Z" class="fill-gray-50 dark:fill-[#130308]"/>
+      </svg>
+    </div>
+  </section>
+
+  <!-- ============================================================
+       HISTORIA — Story section
+       ============================================================ -->
+  <section id="historia" class="py-24 bg-gray-50 dark:bg-[#130308]">
+    <div class="max-w-7xl mx-auto px-6 lg:px-8">
+      <div class="grid lg:grid-cols-2 gap-16 items-center">
+
+        <!-- Image column -->
+        <div class="relative mx-auto w-fit">
+          <!-- Gradient frame -->
+          <div class="absolute -inset-2 rounded-3xl bg-gradient-to-br from-[#FF6B35]/30 via-[#C83B08]/15 to-[#701D2A]/30 blur-sm" aria-hidden="true"></div>
+          <div class="relative rounded-2xl overflow-hidden shadow-[0_20px_60px_rgba(0,0,0,0.15)] dark:shadow-[0_20px_60px_rgba(0,0,0,0.5)]">
+            <img
+              src="https://res.cloudinary.com/dx6sjvmg9/image/upload/f_auto,q_auto:best,w_800/v1777064478/1_tbpyvk.jpg"
+              srcset="https://res.cloudinary.com/dx6sjvmg9/image/upload/f_auto,q_auto:best,w_480/v1777064478/1_tbpyvk.jpg 480w, https://res.cloudinary.com/dx6sjvmg9/image/upload/f_auto,q_auto:best,w_800/v1777064478/1_tbpyvk.jpg 800w, https://res.cloudinary.com/dx6sjvmg9/image/upload/f_auto,q_auto:best,w_1200/v1777064478/1_tbpyvk.jpg 1200w"
+              sizes="(min-width: 1024px) 480px, (min-width: 640px) 420px, 85vw"
+              alt="Walter Entrenador"
+              loading="lazy"
+              decoding="async"
+              class="block h-auto w-auto max-h-[70vh] sm:max-h-[620px] lg:max-h-[680px] max-w-full"
+            />
+          </div>
+
+          <!-- Floating accent card -->
+          <div class="absolute -bottom-6 -right-6 bg-white dark:bg-[#1a0509] rounded-2xl shadow-[0_8px_32px_rgba(0,0,0,0.14)] dark:shadow-[0_8px_32px_rgba(0,0,0,0.5)] p-4 border border-gray-100/60 dark:border-white/5 animate-float">
+            <div class="flex items-center gap-3">
+              <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-[#FF6B35] to-[#C83B08] flex items-center justify-center shrink-0">
+                <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/>
+                </svg>
+              </div>
+              <div>
+                <div class="font-montserrat text-2xl font-black text-[#FF6B35] leading-none">30+</div>
+                <div class="font-quicksand text-xs font-bold text-gray-500 dark:text-gray-400 uppercase tracking-wide">Años de carrera</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Content column -->
+        <div class="space-y-7">
+          <!-- Eyebrow -->
+          <div class="inline-flex items-center gap-2 bg-[#FF6B35]/10 border border-[#FF6B35]/20 px-3 py-1.5 rounded-full">
+            <span class="font-montserrat text-xs font-bold text-[#C83B08] dark:text-[#FF6B35] uppercase tracking-wider">Su historia</span>
+          </div>
+
+          <h2 class="font-montserrat text-4xl lg:text-5xl font-black text-gray-900 dark:text-white leading-tight">
+            La Historia<br/>de Walter
+          </h2>
+
+          <div class="space-y-4 font-quicksand text-[1.05rem] text-gray-700 dark:text-gray-300 leading-relaxed">
+            <p>
+              <strong class="font-bold text-gray-900 dark:text-white">Profesor de gimnasia, preparador físico y entrenador personal</strong> con más de <strong class="font-bold text-[#FF6B35]">30 años de experiencia</strong> en el acompañamiento integral de personas.
+            </p>
+            <p>
+              Su formación y trayectoria combinan <strong class="font-semibold text-[#C83B08] dark:text-[#FF6B35]">entrenamiento funcional, rehabilitación y terapias complementarias</strong>, lo que le permite atender tanto la salud física como el bienestar emocional.
+            </p>
+            <p>
+              Se distingue por su <strong class="font-semibold text-gray-900 dark:text-white">trato personalizado, la empatía y la disciplina</strong>, cualidades que generan un vínculo de confianza con sus clientes. Su objetivo es motivar a cada persona a superarse día a día.
+            </p>
+            <p class="text-[#701D2A] dark:text-[#FF6B35] font-semibold text-lg border-l-4 border-[#FF6B35] pl-4">
+              Walter representa una marca con profesionalismo, compromiso y cercanía, inspirando a quienes buscan mejorar su calidad de vida.
+            </p>
+          </div>
+
+          <!-- Stats row -->
+          <div class="flex items-center gap-8 pt-2">
+            <div class="text-center">
+              <div class="font-montserrat text-5xl font-black text-[#FF6B35] leading-none">30+</div>
+              <div class="font-quicksand text-xs font-bold text-gray-500 dark:text-gray-400 uppercase tracking-wide mt-1">Años de Experiencia</div>
+            </div>
+            <div class="w-px h-14 bg-gray-200 dark:bg-white/10" aria-hidden="true"></div>
+            <div class="text-center">
+              <div class="font-montserrat text-5xl font-black text-[#701D2A] dark:text-[#C56C7A] leading-none">100+</div>
+              <div class="font-quicksand text-xs font-bold text-gray-500 dark:text-gray-400 uppercase tracking-wide mt-1">Clientes Transformados</div>
+            </div>
+          </div>
+
+          <PrimaryButton
+            href="https://wa.me/5491168271296"
+            text="Hablar con Walter"
+            icon="whatsapp"
+            variant="whatsapp"
+            size="lg"
+            target="_blank"
+            rel="noopener noreferrer"
+          />
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================
+       MISSION & VISION
+       ============================================================ -->
+  <section class="py-24 bg-white dark:bg-[#0f0508]">
+    <div class="max-w-7xl mx-auto px-6 lg:px-8">
+      <div class="text-center mb-14">
+        <h2 class="font-montserrat text-4xl lg:text-5xl font-black text-gray-900 dark:text-white leading-tight">
+          Misión &amp; <span class="bg-gradient-to-r from-[#FF6B35] to-[#C83B08] bg-clip-text text-transparent">Visión</span>
+        </h2>
+      </div>
+
+      <div class="grid md:grid-cols-2 gap-7">
+        <!-- Mission -->
+        <div class="group relative bg-gray-50 dark:bg-[#1a0509] rounded-3xl overflow-hidden border border-gray-100 dark:border-white/5 hover:border-[#FF6B35]/30 transition-all duration-500 hover:shadow-[0_12px_40px_rgba(255,107,53,0.12)]">
+          <div class="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-[#FF6B35] to-[#C83B08]" aria-hidden="true"></div>
+          <div class="p-8 space-y-5">
+            <div class="flex items-center gap-4">
+              <div class="w-14 h-14 rounded-2xl bg-gradient-to-br from-[#FF6B35] to-[#C83B08] flex items-center justify-center shrink-0 group-hover:scale-110 group-hover:shadow-[0_4px_16px_rgba(255,107,53,0.40)] transition-all duration-400">
+                <svg class="w-7 h-7 text-white" fill="none" stroke="currentColor" stroke-width="1.75" viewBox="0 0 24 24" aria-hidden="true">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/>
+                </svg>
+              </div>
+              <h3 class="font-montserrat text-3xl font-black text-gray-900 dark:text-white">Misión</h3>
+            </div>
+            <p class="font-quicksand text-lg text-gray-700 dark:text-gray-300 leading-relaxed">
+              Impulsar el bienestar integral de las personas a través del movimiento, la motivación y la disciplina, ofreciendo entrenamientos personalizados que se adapten a las necesidades físicas y emocionales de cada cliente, con un trato cercano, empático y profesional.
+            </p>
+          </div>
+        </div>
+
+        <!-- Vision -->
+        <div class="group relative bg-gray-50 dark:bg-[#1a0509] rounded-3xl overflow-hidden border border-gray-100 dark:border-white/5 hover:border-[#701D2A]/30 transition-all duration-500 hover:shadow-[0_12px_40px_rgba(112,29,42,0.12)]">
+          <div class="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-[#701D2A] to-[#C56C7A]" aria-hidden="true"></div>
+          <div class="p-8 space-y-5">
+            <div class="flex items-center gap-4">
+              <div class="w-14 h-14 rounded-2xl bg-gradient-to-br from-[#701D2A] to-[#8C2A3B] flex items-center justify-center shrink-0 group-hover:scale-110 group-hover:shadow-[0_4px_16px_rgba(112,29,42,0.40)] transition-all duration-400">
+                <svg class="w-7 h-7 text-white" fill="none" stroke="currentColor" stroke-width="1.75" viewBox="0 0 24 24" aria-hidden="true">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/>
+                </svg>
+              </div>
+              <h3 class="font-montserrat text-3xl font-black text-gray-900 dark:text-white">Visión</h3>
+            </div>
+            <p class="font-quicksand text-lg text-gray-700 dark:text-gray-300 leading-relaxed">
+              Consolidarme como referente en entrenamiento y bienestar, creando un espacio de confianza, seguridad y superación personal donde cada persona encuentre la motivación para alcanzar sus metas, expandiendo la marca con valores de empatía, respeto y disciplina.
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================
+       VALUES — asymmetric grid
+       ============================================================ -->
+  <section id="valores" class="relative py-24 bg-gray-50 dark:bg-[#130308] overflow-hidden">
+    <div class="absolute inset-0 pointer-events-none" aria-hidden="true">
+      <div class="absolute top-0 right-0 w-[400px] h-[400px] rounded-full bg-[#FF6B35]/5 dark:bg-[#FF6B35]/8 blur-[80px]"></div>
+    </div>
+
+    <div class="relative z-10 max-w-7xl mx-auto px-6 lg:px-8">
+      <div class="text-center mb-14">
+        <div class="inline-flex items-center gap-2 bg-[#FF6B35]/10 border border-[#FF6B35]/20 px-4 py-1.5 rounded-full mb-5">
+          <span class="w-1.5 h-1.5 rounded-full bg-[#FF6B35]" aria-hidden="true"></span>
+          <span class="font-montserrat text-xs font-bold text-[#C83B08] dark:text-[#FF6B35] uppercase tracking-widest">Lo que nos define</span>
+        </div>
+        <h2 class="font-montserrat text-4xl lg:text-5xl font-black text-gray-900 dark:text-white leading-tight">
+          Nuestros <span class="bg-gradient-to-r from-[#FF6B35] to-[#C83B08] bg-clip-text text-transparent">Valores</span>
+        </h2>
+        <p class="font-quicksand text-lg text-gray-600 dark:text-gray-400 max-w-2xl mx-auto mt-4">
+          Los pilares que guían cada entrenamiento y cada interacción con nuestros clientes.
+        </p>
+      </div>
+
+      <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
+        {[
+          { title: 'Bienestar Integral', desc: 'Cuidamos tanto tu salud física como tu bienestar emocional, entendiendo que son inseparables.', iconPath: 'M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z', gradient: 'from-[#FF6B35] to-[#C83B08]' },
+          { title: 'Disciplina', desc: 'Fomentamos la constancia y el compromiso, claves fundamentales para alcanzar tus objetivos.', iconPath: 'M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138 3.42 3.42 0 00-.806-1.946 3.42 3.42 0 010-4.438 3.42 3.42 0 00.806-1.946 3.42 3.42 0 013.138-3.138z', gradient: 'from-[#701D2A] to-[#8C2A3B]' },
+          { title: 'Empatía', desc: 'Nos ponemos en tu lugar, comprendiendo tus desafíos y celebrando tus logros contigo.', iconPath: 'M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z', gradient: 'from-[#C56C7A] to-[#701D2A]' },
+          { title: 'Comprensión', desc: 'Entendemos que cada persona es única, con necesidades y ritmos completamente diferentes.', iconPath: 'M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z', gradient: 'from-[#FF6B35] to-[#C83B08]' },
+          { title: 'Profesionalismo', desc: '30 años de experiencia respaldados por formación continua y dedicación absoluta a cada cliente.', iconPath: 'M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z', gradient: 'from-[#701D2A] to-[#8C2A3B]' },
+          { title: 'Respeto', desc: 'Valoramos tu tiempo, tus límites y tu proceso personal de transformación en cada sesión.', iconPath: 'M7 11.5V14m0-2.5v-6a1.5 1.5 0 113 0m-3 6a1.5 1.5 0 00-3 0v2a7.5 7.5 0 0015 0v-5a1.5 1.5 0 00-3 0m-6-3V11m0-5.5v-1a1.5 1.5 0 013 0v1m0 0V11m0-5.5a1.5 1.5 0 013 0v3m0 0V11', gradient: 'from-[#C56C7A] to-[#701D2A]' },
+        ].map(value => (
+          <div class="group relative bg-white dark:bg-[#1a0509] rounded-2xl border border-gray-100 dark:border-white/5 hover:border-[#FF6B35]/25 p-8 space-y-4 transition-all duration-400 hover:shadow-[0_12px_32px_rgba(255,107,53,0.10)] hover:-translate-y-1">
+            <div class="absolute top-0 left-0 right-0 h-[2.5px] bg-gradient-to-r origin-left scale-x-0 group-hover:scale-x-100 transition-transform duration-400 rounded-t-2xl" style={`background-image: linear-gradient(to right, var(--tw-gradient-stops))`} aria-hidden="true">
+            </div>
+            <div class={`w-12 h-12 rounded-xl bg-gradient-to-br ${value.gradient} flex items-center justify-center group-hover:scale-110 group-hover:shadow-[0_4px_14px_rgba(255,107,53,0.35)] transition-all duration-300`}>
+              <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" stroke-width="1.75" viewBox="0 0 24 24" aria-hidden="true">
+                <path stroke-linecap="round" stroke-linejoin="round" d={value.iconPath}/>
+              </svg>
+            </div>
+            <h3 class="font-montserrat text-xl font-black text-gray-900 dark:text-white group-hover:text-[#C83B08] dark:group-hover:text-[#FF6B35] transition-colors duration-300">{value.title}</h3>
+            <p class="font-quicksand text-gray-600 dark:text-gray-400 leading-relaxed text-[0.95rem]">{value.desc}</p>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================
+       CTA SECTION
+       ============================================================ -->
+  <section class="relative py-24 bg-white dark:bg-[#0f0508] overflow-hidden">
+    <div class="max-w-4xl mx-auto px-6 text-center">
+      <div class="relative overflow-hidden rounded-3xl">
+        <div class="absolute inset-0 bg-gradient-to-br from-[#701D2A] via-[#8C2A3B] to-[#3A0C13]" aria-hidden="true"></div>
+        <div class="absolute -top-16 -right-16 w-64 h-64 rounded-full bg-[#FF6B35]/15 blur-[60px] pointer-events-none" aria-hidden="true"></div>
+        <div class="absolute inset-0 opacity-[0.04]" style="background-image: radial-gradient(circle, #fff 1px, transparent 1px); background-size: 24px 24px;" aria-hidden="true"></div>
+
+        <div class="relative z-10 px-8 py-14 space-y-6">
+          <h2 class="font-montserrat text-3xl lg:text-4xl font-black text-white">
+            ¿Listo para comenzar tu transformación?
+          </h2>
+          <p class="font-quicksand text-xl text-white/80 max-w-xl mx-auto">
+            Uníte a nuestra comunidad y descubrí cómo podemos ayudarte a alcanzar tus objetivos de bienestar.
+          </p>
+          <div class="flex flex-col sm:flex-row gap-4 justify-center">
+            <PrimaryButton
+              href="https://wa.me/5491168271296"
+              text="Agenda tu Clase de Prueba"
+              icon="whatsapp"
+              variant="whatsapp"
+              size="lg"
+              target="_blank"
+              rel="noopener noreferrer"
+            />
+            <PrimaryButton
+              href="/servicios"
+              text="Ver Servicios"
+              variant="secondary"
+              size="lg"
+              class="border-white/80 text-white hover:bg-white hover:text-[#701D2A] dark:border-white/80"
+            />
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+</Layout>
