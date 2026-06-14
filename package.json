@@ -10,8 +10,8 @@
     "firestore:import": "node scripts/import-firestore-seed.mjs"
   },
   "dependencies": {
+    "@astrojs/netlify": "^7.0.13",
     "@astrojs/react": "^5.0.4",
-    "@astrojs/vercel": "^10.0.5",
     "@tailwindcss/vite": "^4.1.14",
     "@types/react": "^19.2.0",
     "@types/react-dom": "^19.2.0",
