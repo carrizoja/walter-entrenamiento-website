@@ -13,10 +13,11 @@ export async function requireAuth(Astro: AstroGlobal) {
       const decodedClaims = await adminAuth.verifySessionCookie(sessionCookie, true);
       return decodedClaims;
     } else {
-      return Astro.redirect('/admin/login');
+      console.error('[auth] Firebase Admin auth is unavailable during protected route check.');
+      return Astro.redirect('/admin/login?error=config');
     }
   } catch (error) {
-    // Session is invalid or expired
+    console.error('[auth] Session verification failed:', error);
     Astro.cookies.delete('session');
     return Astro.redirect('/admin/login');
   }

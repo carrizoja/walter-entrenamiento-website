@@ -128,6 +128,24 @@ If `FIREBASE_SERVICE_ACCOUNT_KEY` is missing or invalid, the public content page
 3. Mark `FIREBASE_SERVICE_ACCOUNT_KEY` as sensitive if your Netlify plan supports it.
 4. Trigger a new deploy after saving the variables.
 
+## Admin Route Runtime Requirement
+
+The `/admin/**` routes are request-time rendered and need Firebase variables to be available in the deployed server runtime, not only during build.
+
+Required for `/admin/login` and protected admin routes:
+
+- `PUBLIC_FIREBASE_API_KEY`
+- `PUBLIC_FIREBASE_AUTH_DOMAIN`
+- `PUBLIC_FIREBASE_PROJECT_ID`
+- `PUBLIC_FIREBASE_STORAGE_BUCKET`
+- `PUBLIC_FIREBASE_MESSAGING_SENDER_ID`
+- `PUBLIC_FIREBASE_APP_ID`
+- `FIREBASE_SERVICE_ACCOUNT_KEY`
+
+If the public Firebase variables are missing, the login page will show a controlled configuration error instead of crashing.
+
+If `FIREBASE_SERVICE_ACCOUNT_KEY` is missing or invalid, protected admin routes cannot verify sessions and the dashboard will fall back to a controlled non-500 response.
+
 ## Verification Checklist
 
 1. `npm run build`

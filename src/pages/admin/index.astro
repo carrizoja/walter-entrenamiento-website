@@ -8,16 +8,30 @@ import { adminDb } from '../../lib/firebase-admin';
 const session = await requireAuth(Astro);
 if (session instanceof Response) return session;
 
-// Fetch counts
-const [articleCount, galleryCount] = await Promise.all([
-  adminDb?.collection('articles').count().get().then(s => s.data().count) ?? 0,
-  adminDb?.collection('gallery_items').count().get().then(s => s.data().count) ?? 0,
-]);
+let articleCount = 0;
+let galleryCount = 0;
+let publishedCount = 0;
+let draftCount = 0;
+let dashboardError = '';
 
-const [publishedCount, draftCount] = await Promise.all([
-  adminDb?.collection('articles').where('published', '==', true).count().get().then(s => s.data().count) ?? 0,
-  adminDb?.collection('articles').where('published', '==', false).count().get().then(s => s.data().count) ?? 0,
-]);
+try {
+  if (!adminDb) {
+    throw new Error('Firebase Admin database is unavailable.');
+  }
+
+  [articleCount, galleryCount] = await Promise.all([
+    adminDb.collection('articles').count().get().then(s => s.data().count),
+    adminDb.collection('gallery_items').count().get().then(s => s.data().count),
+  ]);
+
+  [publishedCount, draftCount] = await Promise.all([
+    adminDb.collection('articles').where('published', '==', true).count().get().then(s => s.data().count),
+    adminDb.collection('articles').where('published', '==', false).count().get().then(s => s.data().count),
+  ]);
+} catch (error) {
+  console.error('[admin] Dashboard metrics failed:', error);
+  dashboardError = 'No pudimos cargar las metricas del panel en este entorno.';
+}
 ---
 
 <AdminLayout title="Dashboard" activePage="dashboard">
@@ -28,6 +42,12 @@ const [publishedCount, draftCount] = await Promise.all([
     <p style="color: #9ca3af; margin-bottom: 2rem; font-size: 0.9rem;">
       Bienvenido, Walter. Desde acá podés gestionar los artículos y la galería del sitio.
     </p>
+
+    {dashboardError && (
+      <div style="margin-bottom: 1.5rem; background: #422006; border: 1px solid #d97706; color: #fde68a; border-radius: 0.75rem; padding: 1rem 1.25rem; font-size: 0.9rem;">
+        {dashboardError}
+      </div>
+    )}
 
     <!-- Stats grid -->
     <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 1rem; margin-bottom: 2.5rem;">
