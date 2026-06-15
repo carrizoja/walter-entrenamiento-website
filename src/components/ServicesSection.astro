@@ -4,7 +4,7 @@ import ServiceCard from './ServiceCard.astro';
 import PrimaryButton from './ux/PrimaryButton.astro';
 ---
 
-<section id="servicios" class="relative py-28 bg-gray-50 dark:bg-[#130308] overflow-hidden">
+<section id="servicios" class="relative pt-14 bg-gray-50 dark:bg-[#130308] overflow-hidden">
 
   <!-- Decorative background blobs -->
   <div class="absolute inset-0 pointer-events-none" aria-hidden="true">
@@ -79,7 +79,7 @@ import PrimaryButton from './ux/PrimaryButton.astro';
     </div>
 
     <!-- Bottom CTA banner -->
-    <div class="mt-20 relative overflow-hidden rounded-3xl">
+    <article class="mt-20 relative overflow-hidden rounded-3xl">
       <!-- Rich gradient background -->
       <div class="absolute inset-0 bg-gradient-to-br from-[#701D2A] via-[#8C2A3B] to-[#3A0C13]" aria-hidden="true"></div>
       <!-- Decorative blobs inside the banner -->
@@ -88,25 +88,7 @@ import PrimaryButton from './ux/PrimaryButton.astro';
       <!-- Subtle dot grid texture -->
       <div class="absolute inset-0 opacity-[0.04]" style="background-image: radial-gradient(circle, #fff 1px, transparent 1px); background-size: 24px 24px;" aria-hidden="true"></div>
 
-      <div class="relative z-10 px-8 py-12 lg:px-16 lg:py-14 text-center">
-        <h3 class="font-montserrat text-2xl lg:text-3xl xl:text-4xl font-black text-white mb-3 leading-tight">
-          ¿Listo para transformar tu vida?
-        </h3>
-        <p class="font-quicksand text-lg text-white/80 mb-8 max-w-xl mx-auto">
-          Agendá tu clase de prueba gratuita y descubrí cómo podemos ayudarte a alcanzar tus objetivos.
-        </p>
-        <PrimaryButton
-          href="https://wa.me/5491168271296?text=Hola,%20me%20gustaría%20agendar%20una%20clase%20de%20prueba%20gratuita"
-          text="Agendar Clase de Prueba"
-          icon="whatsapp"
-          variant="whatsapp"
-          size="lg"
-          target="_blank"
-          rel="noopener noreferrer"
-          ariaLabel="Agendar clase de prueba gratuita por WhatsApp"
-        />
-      </div>
-    </div>
+    </article>
 
   </div>
 </section>

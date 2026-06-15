@@ -8,6 +8,7 @@ export interface Article {
   featured: boolean;
   read_time: string;
   cover_url: string | null;
+  featured_cover_image?: string | null;
   accent_from: string;
   accent_to: string;
   published: boolean;

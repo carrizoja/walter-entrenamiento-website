@@ -1,6 +1,7 @@
 ---
 import Layout from '../layouts/Layout.astro';
 import PrimaryButton from '../components/ux/PrimaryButton.astro';
+import Contact from '../components/Contact.astro';
 ---
 
 <Layout>
@@ -233,40 +234,5 @@ import PrimaryButton from '../components/ux/PrimaryButton.astro';
   <!-- ============================================================
        CTA SECTION
        ============================================================ -->
-  <section class="relative py-24 bg-white dark:bg-[#0f0508] overflow-hidden">
-    <div class="max-w-4xl mx-auto px-6 text-center">
-      <div class="relative overflow-hidden rounded-3xl">
-        <div class="absolute inset-0 bg-gradient-to-br from-[#701D2A] via-[#8C2A3B] to-[#3A0C13]" aria-hidden="true"></div>
-        <div class="absolute -top-16 -right-16 w-64 h-64 rounded-full bg-[#FF6B35]/15 blur-[60px] pointer-events-none" aria-hidden="true"></div>
-        <div class="absolute inset-0 opacity-[0.04]" style="background-image: radial-gradient(circle, #fff 1px, transparent 1px); background-size: 24px 24px;" aria-hidden="true"></div>
-
-        <div class="relative z-10 px-8 py-14 space-y-6">
-          <h2 class="font-montserrat text-3xl lg:text-4xl font-black text-white">
-            ¿Listo para comenzar tu transformación?
-          </h2>
-          <p class="font-quicksand text-xl text-white/80 max-w-xl mx-auto">
-            Uníte a nuestra comunidad y descubrí cómo podemos ayudarte a alcanzar tus objetivos de bienestar.
-          </p>
-          <div class="flex flex-col sm:flex-row gap-4 justify-center">
-            <PrimaryButton
-              href="https://wa.me/5491168271296"
-              text="Agenda tu Clase de Prueba"
-              icon="whatsapp"
-              variant="whatsapp"
-              size="lg"
-              target="_blank"
-              rel="noopener noreferrer"
-            />
-            <PrimaryButton
-              href="/servicios"
-              text="Ver Servicios"
-              variant="secondary"
-              size="lg"
-              class="border-white/80 text-white hover:bg-white hover:text-[#701D2A] dark:border-white/80"
-            />
-          </div>
-        </div>
-      </div>
-    </div>
-  </section>
+  <Contact />
 </Layout>

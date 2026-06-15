@@ -89,12 +89,12 @@ function formatDate(dateStr: string) {
 
     <!-- Cover image or gradient header -->
     {article.cover_url ? (
-      <div class="max-w-4xl mx-auto px-6 lg:px-8 pb-16">
+      <div class="max-w-4xl mx-auto px-6 lg:px-8 pb-4">
         <img
           src={article.cover_url}
           alt={article.title}
           class="w-full rounded-2xl object-cover"
-          style="max-height: 420px;"
+          style="height: clamp(320px, 45vw, 560px);"
         />
       </div>
     ) : (
@@ -110,16 +110,16 @@ function formatDate(dateStr: string) {
       </div>
     )}
 
-    <div aria-hidden="true">
+    <!-- <div aria-hidden="true">
       <svg viewBox="0 0 1440 80" fill="none" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none" class="w-full h-16 lg:h-20">
         <path d="M0 40C240 80 480 0 720 40C960 80 1200 0 1440 40V80H0V40Z" class="fill-gray-50 dark:fill-[#130308]"/>
       </svg>
-    </div>
+    </div> -->
   </section>
 
   <!-- Article content -->
-  <section class="py-16 bg-gray-50 dark:bg-[#130308]">
-    <div class="max-w-3xl mx-auto px-6 lg:px-8">
+  <section class="py-8 bg-gray-50 dark:bg-[#130308]">
+    <div class="max-w-4xl mx-auto px-6 lg:px-8">
       <div
         class="prose prose-lg dark:prose-invert max-w-none font-quicksand
                prose-headings:font-montserrat prose-headings:font-black
@@ -149,7 +149,7 @@ function formatDate(dateStr: string) {
 
   <!-- Related articles -->
   {related.length > 0 && (
-    <section class="py-20 bg-white dark:bg-[#0f0508]">
+    <section class="py-10 bg-white dark:bg-[#0f0508]">
       <div class="max-w-7xl mx-auto px-6 lg:px-8">
         <h2 class="font-montserrat text-2xl font-black text-gray-900 dark:text-white mb-8">
           Artículos relacionados
@@ -189,7 +189,7 @@ function formatDate(dateStr: string) {
   )}
 
   <!-- CTA -->
-  <section class="py-20 bg-gray-50 dark:bg-[#130308]">
+  <section class="pt-4 pb-12 bg-gray-50 dark:bg-[#130308]">
     <div class="max-w-3xl mx-auto px-6 text-center">
       <div class="relative overflow-hidden rounded-3xl">
         <div class="absolute inset-0 bg-gradient-to-br from-[#701D2A] via-[#8C2A3B] to-[#3A0C13]" aria-hidden="true"></div>

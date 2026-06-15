@@ -74,11 +74,20 @@ function formatDate(dateStr: string) {
             <article class="group relative bg-white dark:bg-[#1a0509] rounded-2xl overflow-hidden border border-gray-100 dark:border-white/5 hover:border-[#FF6B35]/25 transition-all duration-400 hover:shadow-[0_12px_40px_rgba(255,107,53,0.12)] hover:-translate-y-1">
               <!-- Image area with gradient -->
               <div class="relative aspect-video overflow-hidden" style={`background: linear-gradient(135deg, ${post.accent_from} 0%, ${post.accent_to} 100%)`}>
-                <div class="absolute inset-0 flex items-center justify-center">
-                  <svg class="w-16 h-16 text-white/20" fill="none" stroke="currentColor" stroke-width="1.25" viewBox="0 0 24 24" aria-hidden="true">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
-                  </svg>
-                </div>
+                {post.featured_cover_image ? (
+                  <img
+                    src={post.featured_cover_image}
+                    alt={post.title}
+                    class="absolute inset-0 h-full w-full object-cover"
+                    loading="lazy"
+                  />
+                ) : (
+                  <div class="absolute inset-0 flex items-center justify-center">
+                    <svg class="w-16 h-16 text-white/20" fill="none" stroke="currentColor" stroke-width="1.25" viewBox="0 0 24 24" aria-hidden="true">
+                      <path stroke-linecap="round" stroke-linejoin="round" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
+                    </svg>
+                  </div>
+                )}
                 <!-- Category badge -->
                 <div class="absolute top-4 left-4 bg-white/15 backdrop-blur-sm text-white border border-white/20 px-3 py-1 rounded-full font-montserrat text-xs font-bold">
                   {post.category}
@@ -203,7 +212,7 @@ function formatDate(dateStr: string) {
   <!-- ============================================================
        BENEFITS SECTION
        ============================================================ -->
-  <section class="py-24 bg-gray-50 dark:bg-[#130308]">
+  <section class="py-12 bg-gray-50 dark:bg-[#130308]">
     <div class="max-w-7xl mx-auto px-6 lg:px-8">
       <div class="text-center mb-14">
         <h2 class="font-montserrat text-4xl lg:text-5xl font-black text-gray-900 dark:text-white leading-tight">
@@ -262,7 +271,7 @@ function formatDate(dateStr: string) {
   <!-- ============================================================
        NEWSLETTER CTA
        ============================================================ -->
-  <section class="py-24 bg-white dark:bg-[#0f0508]">
+  <section class="py-12 bg-white dark:bg-[#0f0508]">
     <div class="max-w-4xl mx-auto px-6 text-center">
       <div class="relative overflow-hidden rounded-3xl">
         <div class="absolute inset-0 bg-gradient-to-br from-[#701D2A] via-[#8C2A3B] to-[#3A0C13]" aria-hidden="true"></div>
