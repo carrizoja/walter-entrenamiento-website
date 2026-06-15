@@ -1,9 +1,14 @@
 ---
-export const prerender = false;
-
 import Layout from '../../layouts/Layout.astro';
 import PrimaryButton from '../../components/ux/PrimaryButton.astro';
 import { getArticleBySlug, getPublishedArticles } from '../../lib/queries';
+
+export async function getStaticPaths() {
+  const articles = await getPublishedArticles();
+  return articles.map((article) => ({
+    params: { slug: article.slug },
+  }));
+}
 
 const { slug } = Astro.params;
 

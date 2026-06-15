@@ -98,12 +98,35 @@ Local development and Vercel both need:
 
 Use `.env.example` as the tracked template.
 
+## Public Content Build Requirement
+
+The public `/bienestar`, `/bienestar/[slug]`, and `/galeria` pages are generated from Firebase content during the build.
+
+That means these environments must have the Firebase variables available at build time, not only at request time:
+
+- `PUBLIC_FIREBASE_API_KEY`
+- `PUBLIC_FIREBASE_AUTH_DOMAIN`
+- `PUBLIC_FIREBASE_PROJECT_ID`
+- `PUBLIC_FIREBASE_STORAGE_BUCKET`
+- `PUBLIC_FIREBASE_MESSAGING_SENDER_ID`
+- `PUBLIC_FIREBASE_APP_ID`
+- `FIREBASE_SERVICE_ACCOUNT_KEY`
+
+If `FIREBASE_SERVICE_ACCOUNT_KEY` is missing or invalid, the public content pages will fall back to empty-state output instead of crashing, but published Bienestar article detail pages will not be generated.
+
 ## Vercel Setup
 
 1. Open the Vercel project settings.
 2. Add every variable from `.env.example` to Preview and Production.
 3. Mark `FIREBASE_SERVICE_ACCOUNT_KEY` as sensitive.
 4. Redeploy after saving the variables.
+
+## Netlify Setup
+
+1. Open `Site configuration -> Environment variables`.
+2. Add every variable from `.env.example` for the deploy contexts you use.
+3. Mark `FIREBASE_SERVICE_ACCOUNT_KEY` as sensitive if your Netlify plan supports it.
+4. Trigger a new deploy after saving the variables.
 
 ## Verification Checklist
 

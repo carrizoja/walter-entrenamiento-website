@@ -1,16 +1,25 @@
 import { adminDb as db } from './firebase-admin';
 import type { Article, GalleryItem } from '../types/database';
 
+function logContentQueryError(scope: string, error: unknown) {
+  console.error(`[queries] ${scope} failed:`, error);
+}
+
 // ─── Articles ───────────────────────────────────────────────────────────────
 
 export async function getPublishedArticles(): Promise<Article[]> {
   if (!db) return [];
-  const snapshot = await db.collection('articles')
-    .get();
-  return snapshot.docs
-    .map(doc => ({ id: doc.id, ...doc.data() } as Article))
-    .filter(article => article.published)
-    .sort((a, b) => b.created_at.localeCompare(a.created_at));
+  try {
+    const snapshot = await db.collection('articles')
+      .get();
+    return snapshot.docs
+      .map(doc => ({ id: doc.id, ...doc.data() } as Article))
+      .filter(article => article.published)
+      .sort((a, b) => b.created_at.localeCompare(a.created_at));
+  } catch (error) {
+    logContentQueryError('getPublishedArticles', error);
+    return [];
+  }
 }
 
 export async function getFeaturedArticles(): Promise<Article[]> {
@@ -20,13 +29,18 @@ export async function getFeaturedArticles(): Promise<Article[]> {
 
 export async function getArticleBySlug(slug: string): Promise<Article | null> {
   if (!db) return null;
-  const snapshot = await db.collection('articles')
-    .where('slug', '==', slug)
-    .limit(1)
-    .get();
-  if (snapshot.empty) return null;
-  const article = { id: snapshot.docs[0].id, ...snapshot.docs[0].data() } as Article;
-  return article.published ? article : null;
+  try {
+    const snapshot = await db.collection('articles')
+      .where('slug', '==', slug)
+      .limit(1)
+      .get();
+    if (snapshot.empty) return null;
+    const article = { id: snapshot.docs[0].id, ...snapshot.docs[0].data() } as Article;
+    return article.published ? article : null;
+  } catch (error) {
+    logContentQueryError(`getArticleBySlug(${slug})`, error);
+    return null;
+  }
 }
 
 export async function getAllArticles(): Promise<Article[]> {
@@ -73,16 +87,21 @@ export async function toggleArticlePublished(id: string, published: boolean): Pr
 
 export async function getGalleryItems(): Promise<GalleryItem[]> {
   if (!db) return [];
-  const snapshot = await db.collection('gallery_items')
-    .get();
-  return snapshot.docs
-    .map(doc => ({ id: doc.id, ...doc.data() } as GalleryItem))
-    .sort((a, b) => {
-      if (a.sort_order !== b.sort_order) {
-        return a.sort_order - b.sort_order;
-      }
-      return b.created_at.localeCompare(a.created_at);
-    });
+  try {
+    const snapshot = await db.collection('gallery_items')
+      .get();
+    return snapshot.docs
+      .map(doc => ({ id: doc.id, ...doc.data() } as GalleryItem))
+      .sort((a, b) => {
+        if (a.sort_order !== b.sort_order) {
+          return a.sort_order - b.sort_order;
+        }
+        return b.created_at.localeCompare(a.created_at);
+      });
+  } catch (error) {
+    logContentQueryError('getGalleryItems', error);
+    return [];
+  }
 }
 
 export async function getFeaturedVideos(): Promise<GalleryItem[]> {

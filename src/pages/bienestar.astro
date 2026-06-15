@@ -1,6 +1,4 @@
 ---
-export const prerender = false;
-
 import Layout from '../layouts/Layout.astro';
 import PrimaryButton from '../components/ux/PrimaryButton.astro';
 import { getPublishedArticles, getFeaturedArticles } from '../lib/queries';
@@ -19,6 +17,8 @@ try {
 }
 
 const categories = ['Todos', 'Entrenamiento', 'Consejos', 'Motivación', 'Nutrición', 'Recuperación', 'Salud Mental'];
+const hasBlogPosts = blogPosts.length > 0;
+const hasFeaturedPosts = featuredPosts.length > 0;
 
 function formatDate(dateStr: string) {
   return new Date(dateStr).toLocaleDateString('es-AR', { day: 'numeric', month: 'short', year: 'numeric' });
@@ -68,51 +68,55 @@ function formatDate(dateStr: string) {
         <p class="font-quicksand text-gray-500 dark:text-gray-400">Lo más relevante para tu bienestar</p>
       </div>
 
-      <div class="grid md:grid-cols-2 gap-7">
-        {featuredPosts.map(post => (
-          <article class="group relative bg-white dark:bg-[#1a0509] rounded-2xl overflow-hidden border border-gray-100 dark:border-white/5 hover:border-[#FF6B35]/25 transition-all duration-400 hover:shadow-[0_12px_40px_rgba(255,107,53,0.12)] hover:-translate-y-1">
-            <!-- Image area with gradient -->
-            <div class="relative aspect-video overflow-hidden" style={`background: linear-gradient(135deg, ${post.accent_from} 0%, ${post.accent_to} 100%)`}>
-              <div class="absolute inset-0 flex items-center justify-center">
-                <svg class="w-16 h-16 text-white/20" fill="none" stroke="currentColor" stroke-width="1.25" viewBox="0 0 24 24" aria-hidden="true">
-                  <path stroke-linecap="round" stroke-linejoin="round" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
-                </svg>
+      {hasFeaturedPosts ? (
+        <div class="grid md:grid-cols-2 gap-7">
+          {featuredPosts.map(post => (
+            <article class="group relative bg-white dark:bg-[#1a0509] rounded-2xl overflow-hidden border border-gray-100 dark:border-white/5 hover:border-[#FF6B35]/25 transition-all duration-400 hover:shadow-[0_12px_40px_rgba(255,107,53,0.12)] hover:-translate-y-1">
+              <!-- Image area with gradient -->
+              <div class="relative aspect-video overflow-hidden" style={`background: linear-gradient(135deg, ${post.accent_from} 0%, ${post.accent_to} 100%)`}>
+                <div class="absolute inset-0 flex items-center justify-center">
+                  <svg class="w-16 h-16 text-white/20" fill="none" stroke="currentColor" stroke-width="1.25" viewBox="0 0 24 24" aria-hidden="true">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
+                  </svg>
+                </div>
+                <!-- Category badge -->
+                <div class="absolute top-4 left-4 bg-white/15 backdrop-blur-sm text-white border border-white/20 px-3 py-1 rounded-full font-montserrat text-xs font-bold">
+                  {post.category}
+                </div>
+                <div class="absolute top-4 right-4 bg-white text-[#FF6B35] px-3 py-1 rounded-full font-montserrat text-xs font-bold uppercase">
+                  Destacado
+                </div>
               </div>
-              <!-- Category badge -->
-              <div class="absolute top-4 left-4 bg-white/15 backdrop-blur-sm text-white border border-white/20 px-3 py-1 rounded-full font-montserrat text-xs font-bold">
-                {post.category}
-              </div>
-              <div class="absolute top-4 right-4 bg-white text-[#FF6B35] px-3 py-1 rounded-full font-montserrat text-xs font-bold uppercase">
-                Destacado
-              </div>
-            </div>
 
-            <div class="p-6 space-y-3">
-              <div class="flex items-center gap-3 text-xs font-quicksand text-gray-500 dark:text-gray-400">
-                <span>{formatDate(post.created_at)}</span>
-                <span aria-hidden="true">·</span>
-                <span>{post.read_time} lectura</span>
+              <div class="p-6 space-y-3">
+                <div class="flex items-center gap-3 text-xs font-quicksand text-gray-500 dark:text-gray-400">
+                  <span>{formatDate(post.created_at)}</span>
+                  <span aria-hidden="true">·</span>
+                  <span>{post.read_time} lectura</span>
+                </div>
+                <h3 class="font-montserrat text-xl font-black text-gray-900 dark:text-white group-hover:text-[#FF6B35] transition-colors duration-300 leading-snug">
+                  {post.title}
+                </h3>
+                <p class="font-quicksand text-gray-600 dark:text-gray-400 leading-relaxed text-sm">
+                  {post.excerpt}
+                </p>
+                <a
+                  href={`/bienestar/${post.slug}`}
+                  class="inline-flex items-center gap-2 font-montserrat font-bold text-sm text-[#FF6B35] hover:text-[#C83B08] transition-colors duration-300 group/link"
+                  aria-label={`Leer artículo: ${post.title}`}
+                >
+                  Leer más
+                  <svg class="w-4 h-4 transition-transform duration-300 group-hover/link:translate-x-1" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24" aria-hidden="true">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M17 8l4 4m0 0l-4 4m4-4H3"/>
+                  </svg>
+                </a>
               </div>
-              <h3 class="font-montserrat text-xl font-black text-gray-900 dark:text-white group-hover:text-[#FF6B35] transition-colors duration-300 leading-snug">
-                {post.title}
-              </h3>
-              <p class="font-quicksand text-gray-600 dark:text-gray-400 leading-relaxed text-sm">
-                {post.excerpt}
-              </p>
-              <a
-                href={`/bienestar/${post.slug}`}
-                class="inline-flex items-center gap-2 font-montserrat font-bold text-sm text-[#FF6B35] hover:text-[#C83B08] transition-colors duration-300 group/link"
-                aria-label={`Leer artículo: ${post.title}`}
-              >
-                Leer más
-                <svg class="w-4 h-4 transition-transform duration-300 group-hover/link:translate-x-1" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24" aria-hidden="true">
-                  <path stroke-linecap="round" stroke-linejoin="round" d="M17 8l4 4m0 0l-4 4m4-4H3"/>
-                </svg>
-              </a>
-            </div>
-          </article>
-        ))}
-      </div>
+            </article>
+          ))}
+        </div>
+      ) : (
+        <p class="font-quicksand text-gray-500 dark:text-gray-400">Pronto publicaremos artículos destacados.</p>
+      )}
     </div>
   </section>
 
@@ -142,50 +146,57 @@ function formatDate(dateStr: string) {
         <p class="font-quicksand text-gray-500 dark:text-gray-400">Explorá nuestro contenido completo</p>
       </div>
 
-      <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-        {blogPosts.map(post => (
-          <article
-            class="blog-card group relative bg-gray-50 dark:bg-[#1a0509] rounded-2xl overflow-hidden border border-gray-100 dark:border-white/5 hover:border-[#FF6B35]/20 transition-all duration-400 hover:shadow-[0_8px_32px_rgba(255,107,53,0.10)] hover:-translate-y-1"
-            data-cat={post.category.toLowerCase()}
-          >
-            <!-- Top color stripe -->
-            <div class="h-1 w-full" style={`background: linear-gradient(to right, ${post.accent_from}, ${post.accent_to})`} aria-hidden="true"></div>
+      {hasBlogPosts ? (
+        <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+          {blogPosts.map(post => (
+            <article
+              class="blog-card group relative bg-gray-50 dark:bg-[#1a0509] rounded-2xl overflow-hidden border border-gray-100 dark:border-white/5 hover:border-[#FF6B35]/20 transition-all duration-400 hover:shadow-[0_8px_32px_rgba(255,107,53,0.10)] hover:-translate-y-1"
+              data-cat={post.category.toLowerCase()}
+            >
+              <!-- Top color stripe -->
+              <div class="h-1 w-full" style={`background: linear-gradient(to right, ${post.accent_from}, ${post.accent_to})`} aria-hidden="true"></div>
 
-            <div class="p-6 space-y-3">
-              <div class="flex items-center justify-between">
-                <span
-                  class="inline-block px-3 py-1 rounded-full font-montserrat text-xs font-bold text-white"
-                  style={`background: linear-gradient(135deg, ${post.accent_from}, ${post.accent_to})`}
-                >
-                  {post.category}
-                </span>
-                <span class="font-quicksand text-xs text-gray-400">{post.read_time}</span>
+              <div class="p-6 space-y-3">
+                <div class="flex items-center justify-between">
+                  <span
+                    class="inline-block px-3 py-1 rounded-full font-montserrat text-xs font-bold text-white"
+                    style={`background: linear-gradient(135deg, ${post.accent_from}, ${post.accent_to})`}
+                  >
+                    {post.category}
+                  </span>
+                  <span class="font-quicksand text-xs text-gray-400">{post.read_time}</span>
+                </div>
+
+                <h3 class="font-montserrat text-lg font-black text-gray-900 dark:text-white group-hover:text-[#FF6B35] transition-colors duration-300 leading-snug line-clamp-2">
+                  {post.title}
+                </h3>
+                <p class="font-quicksand text-gray-600 dark:text-gray-400 text-sm leading-relaxed line-clamp-3">
+                  {post.excerpt}
+                </p>
+
+                <div class="flex items-center justify-between pt-3 border-t border-gray-100 dark:border-white/5">
+                  <span class="font-quicksand text-xs text-gray-400">{formatDate(post.created_at)}</span>
+                  <a
+                    href={`/bienestar/${post.slug}`}
+                    class="inline-flex items-center gap-1.5 font-montserrat font-bold text-xs text-[#FF6B35] hover:text-[#C83B08] transition-colors duration-300 group/link"
+                    aria-label={`Leer: ${post.title}`}
+                  >
+                    Leer
+                    <svg class="w-3.5 h-3.5 transition-transform duration-300 group-hover/link:translate-x-0.5" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24" aria-hidden="true">
+                      <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7"/>
+                    </svg>
+                  </a>
+                </div>
               </div>
-
-              <h3 class="font-montserrat text-lg font-black text-gray-900 dark:text-white group-hover:text-[#FF6B35] transition-colors duration-300 leading-snug line-clamp-2">
-                {post.title}
-              </h3>
-              <p class="font-quicksand text-gray-600 dark:text-gray-400 text-sm leading-relaxed line-clamp-3">
-                {post.excerpt}
-              </p>
-
-              <div class="flex items-center justify-between pt-3 border-t border-gray-100 dark:border-white/5">
-                <span class="font-quicksand text-xs text-gray-400">{formatDate(post.created_at)}</span>
-                <a
-                  href={`/bienestar/${post.slug}`}
-                  class="inline-flex items-center gap-1.5 font-montserrat font-bold text-xs text-[#FF6B35] hover:text-[#C83B08] transition-colors duration-300 group/link"
-                  aria-label={`Leer: ${post.title}`}
-                >
-                  Leer
-                  <svg class="w-3.5 h-3.5 transition-transform duration-300 group-hover/link:translate-x-0.5" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24" aria-hidden="true">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7"/>
-                  </svg>
-                </a>
-              </div>
-            </div>
-          </article>
-        ))}
-      </div>
+            </article>
+          ))}
+        </div>
+      ) : (
+        <div class="rounded-3xl border border-gray-200 bg-gray-50 px-8 py-14 text-center dark:border-white/10 dark:bg-[#1a0509]">
+          <h3 class="font-montserrat text-2xl font-black text-gray-900 dark:text-white mb-3">Pronto publicaremos novedades</h3>
+          <p class="font-quicksand text-gray-500 dark:text-gray-400">Todavia no hay articulos publicados en Bienestar, pero esta seccion ya esta lista para futuros contenidos.</p>
+        </div>
+      )}
     </div>
   </section>
 
