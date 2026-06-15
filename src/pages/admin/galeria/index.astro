@@ -3,6 +3,7 @@ export const prerender = false;
 
 import AdminLayout from '../../../layouts/AdminLayout.astro';
 import { requireAuth } from '../../../lib/auth';
+import { adminDb } from '../../../lib/firebase-admin';
 import { getGalleryItems, deleteGalleryItem, swapGalleryOrder } from '../../../lib/queries';
 import { deleteMedia } from '../../../lib/storage';
 
@@ -39,7 +40,18 @@ if (Astro.request.method === 'POST') {
   return Astro.redirect('/admin/galeria');
 }
 
-const items = await getGalleryItems();
+let items: Awaited<ReturnType<typeof getGalleryItems>> = [];
+let contentError = '';
+
+try {
+  if (!adminDb) {
+    throw new Error('Firebase Admin database is unavailable.');
+  }
+  items = await getGalleryItems();
+} catch (error) {
+  console.error('[admin/galeria] Failed to load gallery items:', error);
+  contentError = 'No pudimos cargar la galería porque falta la configuración de Firebase en el servidor.';
+}
 ---
 
 <AdminLayout title="Galería" activePage="galeria">
@@ -62,11 +74,17 @@ const items = await getGalleryItems();
       </a>
     </div>
 
-    {items.length === 0 ? (
+    {contentError && (
+      <div style="margin-bottom: 1.5rem; background: #422006; border: 1px solid #d97706; color: #fde68a; border-radius: 0.75rem; padding: 1rem 1.25rem; font-size: 0.9rem;">
+        {contentError}
+      </div>
+    )}
+
+    {!contentError && items.length === 0 ? (
       <div style="background: #1f2937; border: 1px solid #374151; border-radius: 0.75rem; padding: 3rem; text-align: center;">
         <p style="color: #9ca3af;">La galería está vacía. <a href="/admin/galeria/nuevo" style="color: #a78bfa;">Subí el primer item.</a></p>
       </div>
-    ) : (
+    ) : !contentError ? (
       <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 1rem;">
         {items.map((item, idx) => {
           const prev = idx > 0 ? items[idx - 1] : null;
@@ -162,6 +180,6 @@ const items = await getGalleryItems();
           );
         })}
       </div>
-    )}
+    ) : null}
   </div>
 </AdminLayout>

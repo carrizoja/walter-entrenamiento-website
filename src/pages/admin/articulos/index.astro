@@ -3,6 +3,7 @@ export const prerender = false;
 
 import AdminLayout from '../../../layouts/AdminLayout.astro';
 import { requireAuth } from '../../../lib/auth';
+import { adminDb } from '../../../lib/firebase-admin';
 import { getAllArticles, deleteArticle, toggleArticlePublished } from '../../../lib/queries';
 
 const session = await requireAuth(Astro);
@@ -24,7 +25,18 @@ if (Astro.request.method === 'POST') {
   return Astro.redirect('/admin/articulos');
 }
 
-const articles = await getAllArticles();
+let articles: Awaited<ReturnType<typeof getAllArticles>> = [];
+let contentError = '';
+
+try {
+  if (!adminDb) {
+    throw new Error('Firebase Admin database is unavailable.');
+  }
+  articles = await getAllArticles();
+} catch (error) {
+  console.error('[admin/articulos] Failed to load articles:', error);
+  contentError = 'No pudimos cargar los artículos porque falta la configuración de Firebase en el servidor.';
+}
 
 const ARTICLE_CATEGORIES = ['Entrenamiento', 'Consejos', 'Motivación', 'Nutrición', 'Recuperación', 'Salud Mental'];
 ---
@@ -48,12 +60,18 @@ const ARTICLE_CATEGORIES = ['Entrenamiento', 'Consejos', 'Motivación', 'Nutrici
       </a>
     </div>
 
+    {contentError && (
+      <div style="margin-bottom: 1.5rem; background: #422006; border: 1px solid #d97706; color: #fde68a; border-radius: 0.75rem; padding: 1rem 1.25rem; font-size: 0.9rem;">
+        {contentError}
+      </div>
+    )}
+
     <!-- Table -->
-    {articles.length === 0 ? (
+    {!contentError && articles.length === 0 ? (
       <div style="background: #1f2937; border: 1px solid #374151; border-radius: 0.75rem; padding: 3rem; text-align: center;">
         <p style="color: #9ca3af;">Todavía no hay artículos. <a href="/admin/articulos/nuevo" style="color: #FF6B35;">Creá el primero.</a></p>
       </div>
-    ) : (
+    ) : !contentError ? (
       <div style="background: #1f2937; border: 1px solid #374151; border-radius: 0.75rem; overflow: hidden;">
         <table style="width: 100%; border-collapse: collapse;">
           <thead>
@@ -122,6 +140,6 @@ const ARTICLE_CATEGORIES = ['Entrenamiento', 'Consejos', 'Motivación', 'Nutrici
           </tbody>
         </table>
       </div>
-    )}
+    ) : null}
   </div>
 </AdminLayout>
